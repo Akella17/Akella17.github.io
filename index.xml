@@ -1,0 +1,122 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Amlan Kar on Amlan Kar</title>
+    <link>https://amlankar.github.io/</link>
+    <description>Recent content in Amlan Kar on Amlan Kar</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2020 Amlan Kar</copyright>
+    <lastBuildDate>Sun, 12 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Learning to Evaluate Perception Models using Planner-Centric Metrics</title>
+      <link>https://amlankar.github.io/publication/detection-relevance/</link>
+      <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/detection-relevance/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Nonlinear Color Triads for Approximation, Learning and Direct Manipulation of Color Distributions</title>
+      <link>https://amlankar.github.io/publication/colorsails/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/colorsails/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Meta-Sim: Learning to Generate Synthetic Datasets</title>
+      <link>https://amlankar.github.io/publication/meta-sim/</link>
+      <pubDate>Mon, 22 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/meta-sim/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Neural Turtle Graphics for Modeling City Road Layouts</title>
+      <link>https://amlankar.github.io/publication/ntg/</link>
+      <pubDate>Sun, 21 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/ntg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Learning to Caption Images through a Lifetime by Asking Questions</title>
+      <link>https://amlankar.github.io/publication/captionquestions/</link>
+      <pubDate>Sat, 20 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/captionquestions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Devil is in the Edges: Learning Semantic Boundaries from Noisy Annotations</title>
+      <link>https://amlankar.github.io/publication/steal/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/steal/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Creative Flow&#43; Dataset</title>
+      <link>https://amlankar.github.io/publication/creativeflow/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/creativeflow/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Fast Interactive Object Annotation with Curve-GCN</title>
+      <link>https://amlankar.github.io/publication/curvegcn/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/curvegcn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Object Instance Annotation with Deep Extreme Level Set Evolution</title>
+      <link>https://amlankar.github.io/publication/delse/</link>
+      <pubDate>Fri, 01 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/delse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Efficient Interactive Annotation of Segmentation Datasets with Polygon-RNN&#43;&#43;</title>
+      <link>https://amlankar.github.io/publication/polyrnnpp/</link>
+      <pubDate>Tue, 13 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/polyrnnpp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AdaScan: Adaptive Scan Pooling in Deep Convolutional Neural Networks for Human Action Recognition in Videos</title>
+      <link>https://amlankar.github.io/publication/adascan/</link>
+      <pubDate>Sat, 29 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://amlankar.github.io/publication/adascan/</guid>
+      <description>
+
+&lt;h3 id=&#34;b-results-b&#34;&gt;&lt;b&gt;Results&lt;/b&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; References are as in the paper. There is an error in the table in the paper (Wang et al. [44] results), which has been corrected here.
+&lt;img src=&#34;https://amlankar.github.io/img/adascan_quan.jpg&#34; alt=&#34;Quantitative&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;b-qualitative-results-b&#34;&gt;&lt;b&gt;Qualitative Results&lt;/b&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://amlankar.github.io/img/adascan_qual.jpg&#34; alt=&#34;Qualitative&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
