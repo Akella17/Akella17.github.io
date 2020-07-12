@@ -95,7 +95,7 @@
     <img src="https://akella17.github.io/img/DBQPG.png" class="pub-banner" itemprop="image">
     
 
-    <h2>Abstract</h2>
+    <h3>Abstract</h3>
     <p class="pub-abstract" itemprop="text">We study the problem of obtaining accurate policy gradient estimates. This challenge manifests in how best to estimate the policy gradient integral equation using a finite number of samples. Monte-Carlo methods have been the default choice for this purpose, despite suffering from high variance in the gradient estimates. On the other hand, more sample efficient alternatives like Bayesian quadrature methods are less scalable due to their high computational complexity. In this work, we propose deep Bayesian quadrature policy gradient (DBQPG), a computationally efficient high-dimensional generalization of Bayesian quadrature, to estimate the policy gradient integral equation. We show that DBQPG can substitute Monte-Carlo estimation in policy gradient methods, and demonstrate its effectiveness on a set of continuous control benchmarks for robotic locomotion. In comparison to Monte-Carlo estimation, DBQPG provides (i) more accurate gradient estimates with a significantly lower variance, (ii) a consistent improvement in the sample complexity and average return for several on-policy deep policy gradient algorithms, and, (iii) a methodological way to quantify the uncertainty in gradient estimation that can be incorporated to further improve the performance.</p>
 
     <div class="row">
@@ -176,13 +176,11 @@ year={2020}
 
     <div class="article-style">
 
-<h2><b>TL;DR</b></h2>
+<h3><b>TL;DR</b></h3>
       
 <p> We propose two new policy gradient estimators as alternatives to the predominantly used Monte-Carlo estimator. Our approach provides <strong>more accurate</strong> quality gradient estimates with a significantly <strong>lower variance</strong>, quantifies the uncertainty in policy gradient estimation, and consistently offers a better performance on 3 policy gradient algorithms and across 7 MuJoCo environments.</p>
 
-<h2><b>Quality of Gradient Estimation</b></h2>
-
-  <h3><b>Quality of Gradient Estimation</b></h3>
+<h3><b>Quality of Gradient Estimation</b></h3>
 
 <p><strong>Accuracy Plot :-</strong>
 <img src="/img/DBQPG/accuracy_plot.png" alt="Accuracy_Plot"/></p>
@@ -190,7 +188,7 @@ year={2020}
 <p><strong>Variance Plot :-</strong>
 <img src="/img/DBQPG/variance_plot.png" alt="Variance_Plot"/></p>
 
-<h2 id="b-qualitative-results-b"><b>MuJoCo Experiments</b></h2>
+<h3 id="b-qualitative-results-b"><b>MuJoCo Experiments</b></h3>
 
 <p><strong>Vanilla Policy Gradient Algorithm :-</strong>
 <img src="/img/DBQPG/VanillaPG.png" alt="VanillaPG_Plot"/></p>
