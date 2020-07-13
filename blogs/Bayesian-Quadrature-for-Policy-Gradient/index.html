@@ -69,91 +69,18 @@
 
 <div class="container">
 
-<div class="pub" itemscope itemtype="http://schema.org/CreativeWork">
-    <div class="pub-title">
-      <br><br><br><br>
-      <h1 itemprop="name" style="text-align: center"><b>Bayesian Quadrature for Policy Gradient</b></h1>
+<h1>This blog is under construction.</h1>
+  <p>Until then, you may find the following resources helpful.</p>
 
-      <p class="pub-authors" itemprop="author" align="center">
-        
-        <b>Akella Ravi Tej</b>
-        
-</p><br>
-</div>
+<h2><a href="https://akella17.github.io/#publications/">Recent Publications</a></h2>
+ 
+  <ul>
+    <li><a href="https://arxiv.org/pdf/2006.15637.pdf">Deep Bayesian Quadrature Policy Optimization</a></li>
+  </ul>
 
-<h2>TL;DR</h2>
-<ul>
-  <li>We propose a new policy gradient estimator, <strong>deep Bayesian quadrature policy gradient (DBQPG)</strong>, as an alternative to the predominantly used Monte-Carlo estimator. DBQPG provides <strong>more accurate</strong> gradient estimates with a significantly <strong>lower variance</strong>, quantifies the <strong>uncertainty</strong> in policy gradient estimation, and consistently offers a <strong>better performance</strong> for 3 policy gradient algorithms and across 7 MuJoCo environments.</li>
-  <li>We also propose a new policy gradient method, <strong>uncertainty aware policy gradient (UAPG)</strong>, that utilizes the quantified estimation uncertainty in DBQPG to compute <strong>reliable policy updates</strong> with <strong>robust step-sizes</strong>.</li>
-</ul>
-
-<h2>Motivation</h2>
-<p>The universality of policy gradient algorithms, coupled with their simplicity and empirical success, places them amongst the most prominent approaches in the field of reinforcement learning. Infact, there exist more variants of policy gradient algorithms than the number of characters in this blog itself. However, one thing that is common to (almost) all the policy gradient algorithms is its underlying policy gradient estimator: <strong>Monte-Carlo method</strong>.<br>
-In its most general form, policy gradient is an integration equation that is (almost always) statistically intractable. Monte-Carlo method offers a computationally-efficient solution for approximating this numerical integration. However, several recent studies highlight that the Monte-Carlo gradient estimation in PG methods is statistical inefficient and undesirably inaccurate. Policy gradient literature comprises of numerous techniques for improving the statistical efficiency of policy gradient estimation, however, (almost) all these methods stick with the standard MC estimator for gradient computation.</p>
-
-<h2>Preliminaries</h2>
-
-<p>Before diving into the policy gradient, I would like to run you through with the problem statement and notation</p>
-
-<h2>Policy Gradients and How to Find Them</h2>
-
-
-
-    Reinforcement learning has emerged as the go-to approach for the problem of learning to interact with an unknown environment by a sequence of decisions.
-
-     with the objective of maximizing the expected reward. This framework is particularly appealing for its generality and wide-ranging downstream applications in healthcare, robotic navigation, game-playing, etc. 
-
-    Policy gradient (PG) is a reinforcement learning (RL) approach that directly optimizes the agent’s policies by operating on the gradient of their expected return (Sutton et al., 2000; Baxter & Bartlett, 2000).
-
-    <strong>Note:</strong> Readers are assumed to have basic familiarity with the reinforcement learning framework and policy gradient algorithms. For a quick recap of the reinforcement learning framework and policy gradient algorithms, I would encourage the readers to checkout <a href="https://lilianweng.github.io/lil-log/">Lilian Weng's</a> blogs.
-
-    This blog is written assuming
-
-    Prior policy gradient methods overlook the uncertainty in policy gradient estimation, and naively plug-in stochastic policy gradient estimates in policy gradient algorithms, whose derivation and analysis comprises of access to true gradients.
-
-
-    <img src="https://akella17.github.io/img/DBQPG.png" class="pub-banner" itemprop="image">
-    
-
-    <h3>Outline</h3>
-    <p class="pub-abstract" itemprop="text">We study the problem of obtaining accurate policy gradient estimates. This challenge manifests in how best to estimate the policy gradient integral equation using a finite number of samples. Monte-Carlo methods have been the default choice for this purpose, despite suffering from high variance in the gradient estimates. On the other hand, more sample efficient alternatives like Bayesian quadrature methods are less scalable due to their high computational complexity. In this work, we propose deep Bayesian quadrature policy gradient (DBQPG), a computationally efficient high-dimensional generalization of Bayesian quadrature, to estimate the policy gradient integral equation. We show that DBQPG can substitute Monte-Carlo estimation in policy gradient methods, and demonstrate its effectiveness on a set of continuous control benchmarks for robotic locomotion. In comparison to Monte-Carlo estimation, DBQPG provides (i) more accurate gradient estimates with a significantly lower variance, (ii) a consistent improvement in the sample complexity and average return for several on-policy deep policy gradient algorithms, and, (iii) a methodological way to quantify the uncertainty in gradient estimation that can be incorporated to further improve the performance.</p>
-
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-10">
-        <div class="row">
-          <div class="col-xs-12 col-sm-3 pub-row-heading">Publication</div>
-          <div class="col-xs-12 col-sm-9">ArXiv 2020</div>
-        </div>
-      </div>
-      <div class="col-sm-1"></div>
-    </div>
-    <div class="visible-xs space-below"></div>
-
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-10">
-        <div class="row">
-          <div class="col-xs-12 col-sm-3 pub-row-heading">Date</div>
-          <div class="col-xs-12 col-sm-9" itemprop="datePublished">
-            Jun, 2020
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-1"></div>
-    </div>
-    <div class="visible-xs space-below"></div>
-
-    <div class="row" style="padding-top: 10px">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-10">
-        <div class="row">
-          <div class="col-xs-12 col-sm-3 pub-row-heading" style="line-height:34px;">Links</div>
-          <div class="col-xs-12 col-sm-9">
-
-            
+<p style="margin-left: 40px">
 <a class="btn btn-primary btn-outline btn-xs" href="https://arxiv.org/pdf/2006.15637.pdf">
-  PDF
+  Paper
 </a>
       
       
@@ -182,50 +109,9 @@ journal={arXiv preprint arXiv:2006.15637},
 year={2020}
 }
 </pre>
+</p>
 
 
-
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-1"></div>
-    </div>
-    <div class="visible-xs space-below"></div>
-
-    <div class="space-below"></div>
-
-    <div class="article-style">
-
-<h3><b>TL;DR</b></h3>
-<ul>
-  <li>We propose a new policy gradient estimator, <strong>deep Bayesian quadrature policy gradient (DBQPG)</strong>, as an alternative to the predominantly used Monte-Carlo estimator. Our approach provides <strong>more accurate</strong> gradient estimates with a significantly <strong>lower variance</strong>, quantifies the <strong>uncertainty</strong> in policy gradient estimation, and consistently offers a <strong>better performance</strong> for 3 policy gradient algorithms and across 7 MuJoCo environments.</li>
-  <li>We also propose another policy gradient estimator, <strong>uncertainty aware policy gradient (UAPG)</strong>, that utilizes the quantified estimation uncertainty to compute <strong>reliable policy updates</strong> with <strong>robust step-sizes</strong>.</li>
-</ul>
-
-<h3><b>Quality of Gradient Estimation</b></h3>
-
-<p><strong>1. Accuracy Plot (Gradient Cosine Similarity) :-</strong>
-<img src="/img/DBQPG/accuracy_plot.png" alt="Accuracy_Plot"/></p>
-
-<p><strong>2. Variance Plot (Normalized Gradient Variance) :-</strong>
-<img src="/img/DBQPG/variance_plot.png" alt="Variance_Plot"/></p>
-
-<h3 id="b-qualitative-results-b"><b>MuJoCo Experiments</b></h3>
-
-<p><strong>1. Vanilla Policy Gradient :-</strong>
-<img src="/img/DBQPG/VanillaPG_plot.png" alt="VanillaPG_Plot"/></p>
-
-<p><strong>2. Natural Policy Gradient :-</strong>
-<img src="/img/DBQPG/NPG_plot.png" alt="NPG_Plot"/></p>
-      
-<p><strong>3. Trust Region Policy Optimization :-</strong>
-<img src="/img/DBQPG/TRPO_plot.png" alt="TRPO_Plot"/></p>
-</div>
-
-  </div>
-
-
-</div>
 <footer class="site-footer">
   <div class="container">
     <p class="powered-by">

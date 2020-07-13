@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta name="author" content="Akella Ravi Tej">
+  <meta name="description" content="&lt;first_name&gt;@cs.toronto.edu">
+
+  <link rel="stylesheet" href="/css/highlight.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/academicons.min.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700|Merriweather|Roboto+Mono">
+  <link rel="stylesheet" href="/css/hugo-academic.css">
+  
+
+  <link rel="alternate" href="https://akella17.github.io/index.xml" type="application/rss+xml" title="Akella Ravi Tej">
+  <link rel="feed" href="https://akella17.github.io/index.xml" type="application/rss+xml" title="Akella Ravi Tej">
+
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
+
+  <link rel="canonical" href="https://akella17.github.io/blog/Bayesian-Quadrature-for-Policy-Gradient/">
+
+  
+
+  <title>Bayesian Quadrature for Policy Gradient | Akella Ravi Tej</title>
+
+</head>
+<body id="top">
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Akella Ravi Tej</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse" id="#navbar-collapse-1">
+
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+        <li class="nav-item"><a href="/#">Home</a></li>
+        
+        <li class="nav-item"><a href="/#publications">Publications</a></li>
+        
+        <li class="nav-item"><a href="/#Blogs">Blogs</a></li>
+        
+        <li class="nav-item"><a href="/#News">News</a></li>
+        
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+<div class="pub" itemscope itemtype="http://schema.org/CreativeWork">
+    <div class="pub-title">
+      <br><br><br><br>
+      <h1 itemprop="name" style="text-align: center"><b>Bayesian Quadrature for Policy Gradient</b></h1>
+
+      <p class="pub-authors" itemprop="author" align="center">
+        
+        <b>Akella Ravi Tej</b>
+        
+</p><br>
+</div>
+
+<h2>TL;DR</h2>
+<ul>
+  <li>We propose a new policy gradient estimator, <strong>deep Bayesian quadrature policy gradient (DBQPG)</strong>, as an alternative to the predominantly used Monte-Carlo estimator. DBQPG provides <strong>more accurate</strong> gradient estimates with a significantly <strong>lower variance</strong>, quantifies the <strong>uncertainty</strong> in policy gradient estimation, and consistently offers a <strong>better performance</strong> for 3 policy gradient algorithms and across 7 MuJoCo environments.</li>
+  <li>We also propose a new policy gradient method, <strong>uncertainty aware policy gradient (UAPG)</strong>, that utilizes the quantified estimation uncertainty in DBQPG to compute <strong>reliable policy updates</strong> with <strong>robust step-sizes</strong>.</li>
+</ul>
+
+<h2>Motivation</h2>
+<p>The universality of policy gradient algorithms, coupled with their simplicity and empirical success, places them amongst the most prominent approaches in the field of reinforcement learning. Infact, there exist more variants of policy gradient algorithms than the number of characters in this blog itself. However, one thing that is common to (almost) all the policy gradient algorithms is its underlying policy gradient estimator: <strong>Monte-Carlo method</strong>.<br>
+In its most general form, policy gradient is an integration equation that is (almost always) statistically intractable. Monte-Carlo method offers a computationally-efficient solution for approximating this numerical integration. However, several recent studies highlight that the Monte-Carlo gradient estimation in PG methods is statistical inefficient and undesirably inaccurate. Policy gradient literature comprises of numerous techniques for improving the statistical efficiency of policy gradient estimation, however, (almost) all these methods stick with the standard MC estimator for gradient computation.</p>
+
+<h2>Preliminaries</h2>
+
+<p>Before diving into the policy gradient, I would like to run you through with the problem statement and notation</p>
+
+<h2>Policy Gradients and How to Find Them</h2>
+
+
+
+    Reinforcement learning has emerged as the go-to approach for the problem of learning to interact with an unknown environment by a sequence of decisions.
+
+     with the objective of maximizing the expected reward. This framework is particularly appealing for its generality and wide-ranging downstream applications in healthcare, robotic navigation, game-playing, etc. 
+
+    Policy gradient (PG) is a reinforcement learning (RL) approach that directly optimizes the agent’s policies by operating on the gradient of their expected return (Sutton et al., 2000; Baxter & Bartlett, 2000).
+
+    <strong>Note:</strong> Readers are assumed to have basic familiarity with the reinforcement learning framework and policy gradient algorithms. For a quick recap of the reinforcement learning framework and policy gradient algorithms, I would encourage the readers to checkout <a href="https://lilianweng.github.io/lil-log/">Lilian Weng's</a> blogs.
+
+    This blog is written assuming
+
+    Prior policy gradient methods overlook the uncertainty in policy gradient estimation, and naively plug-in stochastic policy gradient estimates in policy gradient algorithms, whose derivation and analysis comprises of access to true gradients.
+
+
+    <img src="https://akella17.github.io/img/DBQPG.png" class="pub-banner" itemprop="image">
+    
+
+    <h3>Outline</h3>
+    <p class="pub-abstract" itemprop="text">We study the problem of obtaining accurate policy gradient estimates. This challenge manifests in how best to estimate the policy gradient integral equation using a finite number of samples. Monte-Carlo methods have been the default choice for this purpose, despite suffering from high variance in the gradient estimates. On the other hand, more sample efficient alternatives like Bayesian quadrature methods are less scalable due to their high computational complexity. In this work, we propose deep Bayesian quadrature policy gradient (DBQPG), a computationally efficient high-dimensional generalization of Bayesian quadrature, to estimate the policy gradient integral equation. We show that DBQPG can substitute Monte-Carlo estimation in policy gradient methods, and demonstrate its effectiveness on a set of continuous control benchmarks for robotic locomotion. In comparison to Monte-Carlo estimation, DBQPG provides (i) more accurate gradient estimates with a significantly lower variance, (ii) a consistent improvement in the sample complexity and average return for several on-policy deep policy gradient algorithms, and, (iii) a methodological way to quantify the uncertainty in gradient estimation that can be incorporated to further improve the performance.</p>
+
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-xs-12 col-sm-3 pub-row-heading">Publication</div>
+          <div class="col-xs-12 col-sm-9">ArXiv 2020</div>
+        </div>
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+    <div class="visible-xs space-below"></div>
+
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-xs-12 col-sm-3 pub-row-heading">Date</div>
+          <div class="col-xs-12 col-sm-9" itemprop="datePublished">
+            Jun, 2020
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+    <div class="visible-xs space-below"></div>
+
+    <div class="row" style="padding-top: 10px">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-xs-12 col-sm-3 pub-row-heading" style="line-height:34px;">Links</div>
+          <div class="col-xs-12 col-sm-9">
+
+            
+<a class="btn btn-primary btn-outline btn-xs" href="https://arxiv.org/pdf/2006.15637.pdf">
+  PDF
+</a>
+      
+      
+<a class="btn btn-primary btn-outline btn-xs"
+onclick="
+    var div = document.getElementById('DBQPG_bib');
+    if (div.style.display !== 'none') {
+        div.style.display = 'none';
+    }
+    else {
+        div.style.display = 'block';
+    }
+">
+  BibTeX
+</a>
+<a class="btn btn-primary btn-outline btn-xs" href="https://github.com/Akella17/Deep-Bayesian-Quadrature-Policy-Optimization">
+  Code
+</a>
+      
+      
+<pre id = "DBQPG_bib", style="display:none">
+@article{ravi2020DBQPG,
+title={Deep Bayesian Quadrature Policy Optimization},
+author={Akella Ravi Tej and Kamyar Azizzadenesheli and Mohammad Ghavamzadeh and Anima Anandkumar and Yisong Yue},
+journal={arXiv preprint arXiv:2006.15637},
+year={2020}
+}
+</pre>
+
+
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-1"></div>
+    </div>
+    <div class="visible-xs space-below"></div>
+
+    <div class="space-below"></div>
+
+    <div class="article-style">
+
+<h3><b>TL;DR</b></h3>
+<ul>
+  <li>We propose a new policy gradient estimator, <strong>deep Bayesian quadrature policy gradient (DBQPG)</strong>, as an alternative to the predominantly used Monte-Carlo estimator. Our approach provides <strong>more accurate</strong> gradient estimates with a significantly <strong>lower variance</strong>, quantifies the <strong>uncertainty</strong> in policy gradient estimation, and consistently offers a <strong>better performance</strong> for 3 policy gradient algorithms and across 7 MuJoCo environments.</li>
+  <li>We also propose another policy gradient estimator, <strong>uncertainty aware policy gradient (UAPG)</strong>, that utilizes the quantified estimation uncertainty to compute <strong>reliable policy updates</strong> with <strong>robust step-sizes</strong>.</li>
+</ul>
+
+<h3><b>Quality of Gradient Estimation</b></h3>
+
+<p><strong>1. Accuracy Plot (Gradient Cosine Similarity) :-</strong>
+<img src="/img/DBQPG/accuracy_plot.png" alt="Accuracy_Plot"/></p>
+
+<p><strong>2. Variance Plot (Normalized Gradient Variance) :-</strong>
+<img src="/img/DBQPG/variance_plot.png" alt="Variance_Plot"/></p>
+
+<h3 id="b-qualitative-results-b"><b>MuJoCo Experiments</b></h3>
+
+<p><strong>1. Vanilla Policy Gradient :-</strong>
+<img src="/img/DBQPG/VanillaPG_plot.png" alt="VanillaPG_Plot"/></p>
+
+<p><strong>2. Natural Policy Gradient :-</strong>
+<img src="/img/DBQPG/NPG_plot.png" alt="NPG_Plot"/></p>
+      
+<p><strong>3. Trust Region Policy Optimization :-</strong>
+<img src="/img/DBQPG/TRPO_plot.png" alt="TRPO_Plot"/></p>
+</div>
+
+  </div>
+
+
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2020 Akella Ravi Tej &middot; 
+
+      Powered by the <a href="https://github.com/gcushen/hugo-academic" target="_blank">Academic
+      theme</a> for <a href="http://gohugo.io" target="_blank">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/TweenMax.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/ScrollToPlugin.min.js"></script>
+    <script src="/js/jquery-1.12.3.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-53775284-5', 'auto');
+        ga('send', 'pageview');
+
+         
+        var links = document.querySelectorAll('a');
+        Array.prototype.map.call(links, function(item) {
+            if (item.host != document.location.host) {
+                item.addEventListener('click', function() {
+                    var action = item.getAttribute('data-action') || 'follow';
+                    ga('send', 'event', 'outbound', action, item.href);
+                });
+            }
+        });
+    </script>
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    <script async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+    
+
+  </body>
+</html>
