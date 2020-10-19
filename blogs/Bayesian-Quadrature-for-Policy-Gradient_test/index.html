@@ -25,8 +25,6 @@
 
   <link rel="canonical" href="https://akella17.github.io/blog/Bayesian-Quadrature-for-Policy-Gradient/">
 
-  
-
   <title>Bayesian Quadrature for Policy Gradient | Akella Ravi Tej</title>
 
 </head>
@@ -71,19 +69,115 @@
 
 <div class="pub" itemscope itemtype="http://schema.org/CreativeWork">
     <div class="pub-title">
-      <br><br><br><br>
-      <h1 itemprop="name" style="text-align: center"><b>Bayesian Quadrature for Policy Gradient</b></h1>
+      <br>
+      <h1 itemprop="name" style="font-size: 275%; text-align: center; font-variant: small-caps; font-family: Comic Sans MS; color: #008080"><b>Bayesian Quadrature for Policy Gradient Estimation</b></h1>
 
       <p class="pub-authors" itemprop="author" align="center">
         
-        <b>Akella Ravi Tej</b>
-        
-</p><br>
+        <h2 style="font-size: 175%; text-align: center; font-variant: small-caps; color: #893a5d"><b> Accuracy &uarr; &emsp; &emsp; Variance &darr; &emsp; &emsp; Sample Efficiency &uarr; &emsp; &emsp; Reliability &uarr; </b></h2>
+</p><p align="center"><b><i>Published on 20<sup>th</sup> Oct, 2020</i></b></p><br>
 </div>
 
-<h2>TL;DR</h2>
+<p><i>
+	In this post, I share my views on the Bayesian Quadrature method for policy gradient estimation. In particular, this blog is only a subset of my findings from my recent colaboration with <a href="https://www.cs.purdue.edu/homes/kamyar/">Kamyar Azizzadenesheli</a> (Purdue University), <a href="https://mohammadghavamzadeh.github.io/">Mohammad Ghavamzadeh</a> (Google Research), <a href="http://tensorlab.cms.caltech.edu/users/anima/">Anima Anandkumar</a> (Caltech & NVIDIA), and <a href="http://www.yisongyue.com/">Yisong Yue</a> (Caltech). For full details, do check-out our <a href="https://arxiv.org/abs/2006.15637">Deep Bayesian Quadrature Policy Optimization</a> paper and its <a href="https://github.com/Akella17/Deep-Bayesian-Quadrature-Policy-Optimization">open source implementation</a>. 
+	<!-- Further, the only reason I use &ldquo;I&rdquo; instead of &ldquo;we&rdquo; throughout the blog is to ensure that I am responsible for any mistakes.  -->
+</i></p>
+<br>
+<h1 style="text-align: center; font-variant: small-caps;">TL; DR</h1>
+<br>
+<p>
+	Bayesian Quadrature method provides a way to approximate numerical integration under a probability distribution using samples drawn from the same distribution. As it happens, policy gradient is also an intractable integral equation which is generally approximated using samples. That's pretty much it! BQ can be used for approximating PG.
+</p>
+
+<p>
+	<b><i>But, why exactly do we need BQ-PG? : </i></b> While it may not seem super exciting at the first glace, BQ-PG has several interesting properties, including connections with Monte-Carlo (MC) estimation (popular choice) and uncertainty quantification. But even if theory does not interest you, this approach empirically offers (i) more accurate policy gradient estimates with a significantly lower variance, and (ii) a consistent imporvement in sample complexity and average return across $7$ MuJoCo benchmark environments. So the question really is <i>&ldquo;Why not BQ-PG?&rdquo;</i>.
+</p>
+
+<br>
+<h1 style="text-align: center; font-variant: small-caps;">Problem Formulation</h1>
+<br>
+<img src="https://akella17.github.io/img/RL/MDP_drawio.png" class="pub-banner" itemprop="image">
+<br>
+<p>
+	Consider a Markov decision process (MDP) $\langle\mathcal{S}, \mathcal{A}, P, r, \rho_0, \gamma\rangle$, where $\mathcal{S}$ is the state-space, $\mathcal{A}$ is the action-space, $P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$ is the transition kernel that maps each state-action pair to a distribution over the states $\Delta_\mathcal{S}$, $r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$ is the reward kernel, $\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$ is the initial state distribution, and $\gamma \in [0,1)$ is the discount factor. We denote by $\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$ a stochastic parameterized policy with parameters $\theta\in\Theta$. The MDP controlled by the policy $\pi_{\theta}$ induces a Markov chain over state-action pairs $z = (s,a) \in \mathcal{Z} = \mathcal{S} \times \mathcal{A}$, with an initial density $\rho^{\pi_{\theta}}_0(z_0) = \pi_{\theta}(a_0|s_0) \rho_0(s_0)$ and a transition probability distribution $P^{\pi_{\theta}}(z_t|z_{t-1}) = \pi_{\theta}(a_t|s_t) P(s_t|z_{t-1})$. The discounted state-action visitation frequency $\rho^{\pi_{\theta}}$ is defined as:
+
+	\begin{equation}
+	\label{eqn:state_visitation}
+	P^{\pi_{\theta}}_t(z_t) = \int_{\mathcal{Z}^t} dz_0 ... dz_{t-1} P^{\pi_{\theta}}_0(z_0) \prod_{\tau=1}^t P^{\pi_{\theta}}(z_\tau|z_{\tau-1}), \qquad \rho^{\pi_{\theta}}(z) = \sum_{t=0}^{\infty} \gamma^t P^{\pi_{\theta}}_t(z).
+	\end{equation}
+
+	I will be using the standard definition of action-value function $Q_{\pi_{\theta}}$:
+	
+	\begin{equation}
+	\label{eqn:q_func_definitions}
+	Q_{\pi_{\theta}} (z_t) = \: E\Big[\sum\nolimits_{\tau=0}^{\infty} \gamma^\tau r(z_{t+\tau}) ~\Big|~ z_{t+\tau+1} \sim P^{\pi_{\theta}}(.|z_{t+\tau})\Big].
+	\end{equation}
+	
+	In simple words, $Q_{\pi_{\theta}} (z)$ is the expected sum of (discounted) rewards along a trajectory starting from $z = (s,a)$ and jointly-controlled by the agent's policy $\pi_{\theta}$ (<span style="color:limegreen">known</span>) and MDP's dynamics $\langle\rho_0, r, P \rangle$ (<span style="color:red">unknown</span>). This notation allows us to conveniently formulate the expected return $J(\theta)$ under $\pi_{\theta}$ simply as the average $Q_{\pi_{\theta}}$ value of MDP's initial states:
+	
+	\begin{equation}
+	\label{eqn:old_pg_objective_definitions}
+	J(\theta) = E_{z_0\sim\rho^{\pi_{\theta}}_0}\left[Q_{\pi_{\theta}}(z_0)\right] = E_{s_0\sim\rho_0}\left[ E_{a_0\sim \pi_{\theta}(.|s_0)} \left[ Q_{\pi_{\theta}}(s_0, a_0) \right] \right].
+	\end{equation}
+
+	However, the gradient of $J(\theta)$ with respect to policy parameters $\theta$ cannot be directly computed from this formulation. The policy gradient theorem (<a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Sutton et al. 2000</a>) provides an analytical expression for the gradient of the expected return $J(\theta)$, as:
+	
+	\begin{equation}
+	\label{eqn:policy_gradient_theorem}
+	\displaystyle \nabla_{\theta} J(\theta) = \int_{\mathcal{Z}} \rho^{\pi_\theta}(z) \nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z) dz = E_{z \sim \rho^{\pi_\theta}}\big[\nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z)\big],
+	\end{equation}
+	
+	<b>Note</b> that the initial state distribution $\rho_0(s)$, initial state-action density $\rho^{\pi_{\theta}}_0(z)$, and the discounted state-action visitation frequency $\rho^{\pi_{\theta}} (z)$ have different definitions. Nevertheless, the exact evaluation of the PG integral in Eq. \ref{eqn:policy_gradient_theorem} is often intractable for MDPs with a large (or continuous) state or action space. This is because $Q_{\pi_{\theta}} (z)$ and $\rho^{\pi_{\theta}}$ cannot be computed exactly due to their dependence on the MDP's <span style="color:red">unknown</span> dynamics. $Q_{\pi_{\theta}} (z)$ is generally computed from Monte-Carlo policy rollouts (a.k.a TD($1$) estimates), function approximation (e.g. TD($0$), TD($\lambda$) estimates), or a hybrid of both, i.e. advantage function (e.g. <a href="https://arxiv.org/abs/1602.01783">A2C</a>, <a href="https://arxiv.org/abs/1506.02438">GAE</a>). While $\rho^{\pi_{\theta}}$ is unknown, sampling from $\rho^{\pi_{\theta}}$ can be simulated by running the policy $\pi_{\theta}$ in the environment. Thus, in practice, the PG integral needs to be approximated using a finite set of samples $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$.
+
+</p>
+
+<br>
+<h1 style="text-align: center; font-variant: small-caps;">Monte-Carlo Method: Predominant Choice for PG Estimation</h1>
+<br>
+<p>
+	<b>Monte-Carlo (MC)</b> method approximates the PG integral in Eq \ref{eqn:policy_gradient_theorem} by the finite sum:
+
+	\begin{equation}
+	\label{eqn:Monte-Carlo_PG}
+	\displaystyle \int_{\mathcal{Z}} \rho^{\pi_\theta}(z) \mathbf{u}(z) Q_{\pi_\theta}(z) dz \; \approx \; \mathbf{L}_{\theta}^{MC} = \frac{1}{n}\sum_{i=1}^{n} Q_{\pi_\theta}(z_i) \mathbf{u}(z_i) = \frac{1}{n} \mathbf{U} \mathbf{Q},
+	\end{equation}
+
+	where $\mathbf{u}(z) = \nabla_{\theta} \log \pi_{\theta} (a|s)$ is the score function, a $|\Theta|$ dimensional vector ($|\Theta|$ is the number of policy parameters). To keep the expressions concise, the function evaluations at sample locations $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$ are grouped into $\mathbf{U} = [ \mathbf{u}(z_1), ..., \mathbf{u}(z_n)]$, a $|\Theta| \times n$ dimensional matrix, and $\mathbf{Q} = [Q_{\pi_\theta}(z_1),...,Q_{\pi_\theta}(z_n)]$, an $n$ dimensional vector. Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or function approximation.<br><br>
+
+	MC method returns the gradient mean evaluated at sample locations, which, according to the central limit theorem (CLT), is an unbiased estimate of the true gradient. However, CLT also suggests that the MC estimates suffer from a slow convergence rate ($n^{-1/2}$) and high variance, necessitating a large sample size $n$ for reliable PG estimation (<a href="https://arxiv.org/abs/1811.02553">Ilyas et al., 2018</a>). Yet, MC methods are more computationally efficient than their sample-efficient alternatives, making them ubiquitous in PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>).<br><br>
+
+	Another problem with MC-PG is that it returns stochastic gradient estimates with non-uniform gradient uncertainty, i.e., the MC estimator is more uncertain about the stepsize of some gradient components than others. Moreover, MC-PG is a point estimation method and hence does not quantify the uncertainty in its gradient estimation. Thus, MC-PG occasionally take large steps along directions of high uncertainty, resulting in a bad policy update and catastrophic performance degradation.
+
+</p>
+
+<br>
+<h1 style="text-align: center; font-variant: small-caps;">Bayesian Quadrature</h1>
+<br>
+<p>
+	
+</p>
+
+
+
+
+<br>
+<h1 style="text-align: center; font-variant: small-caps;">Under Construction</h1>
+<p>
+Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or an explicit critic network (different from implicit \GP critic).
+
+	In particular, this post only covers the fundamentals of BQ-PG, its connection to Monte-Carlo estimation and some other interesting findings. To those less familiar with policy gradient algorithms, I recommend checking-out Lilian Weng's awesome <a href="https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html">blog post</a> (for this post, reading upto <a href="https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#proof-of-policy-gradient-theorem">PG theorem</a> is sufficient). While all this wording might seem confusing, but the underlying idea is very easy to grasp. 
+</p>
+
+<p> Policy gradient (PG) algorithms are one of the few reinforcement learning (RL) approaches that offer promising results on high-dimensional environments with a continuous action-space. Their simpliciy and effectiveness makes them quite appealing among other RL approaches. However, the derivation and analysis of PG algorithms is quite different from their deployment in practice, which is closely linked with their biggest criticism, the high-variance problem. More specifically, all the contemporary deep PG algorithms essentially use the policy gradient estimator, Monte-Carlo integration, which we identify as the root cause of this problem. </p>
+
+<p> In this blog, I will introduce you to Bayesian quadrature (BQ), a relatively less popular approach for estimating the policy gradient. While BQ offers significantly better PG estimates for the same number of samples, it scales with a cubic time complexity, which deterred the research along this direction. </p>
+
+<h2>Overview</h2>
 <ul>
-  <li>We propose a new policy gradient estimator, <strong>deep Bayesian quadrature policy gradient (DBQPG)</strong>, as an alternative to the predominantly used Monte-Carlo estimator. DBQPG provides <strong>more accurate</strong> gradient estimates with a significantly <strong>lower variance</strong>, quantifies the <strong>uncertainty</strong> in policy gradient estimation, and consistently offers a <strong>better performance</strong> for 3 policy gradient algorithms and across 7 MuJoCo environments.</li>
+  <li> In MDP setting, the distribution over state-action pairs is jointly controlled by the policy (known) and the MDP's dynamics (unknown). </li>
+  <li> Policy gradient can be expressed as an integration problem, where the integral is under this unknown state-action distribution. </li>
+  <li> While it is intractable to evaluate this distribution, sampling from it can be simulated by simply running the policy in the MDP. </li>
+<li> We propose a new policy gradient estimator, <strong>deep Bayesian quadrature policy gradient (DBQPG)</strong>, as an alternative to the predominantly used Monte-Carlo estimator. DBQPG provides <strong>more accurate</strong> gradient estimates with a significantly <strong>lower variance</strong>, quantifies the <strong>uncertainty</strong> in policy gradient estimation, and consistently offers a <strong>better performance</strong> for 3 policy gradient algorithms and across 7 MuJoCo environments.</li>
   <li>We also propose a new policy gradient method, <strong>uncertainty aware policy gradient (UAPG)</strong>, that utilizes the quantified estimation uncertainty in DBQPG to compute <strong>reliable policy updates</strong> with <strong>robust step-sizes</strong>.</li>
 </ul>
 
@@ -284,6 +378,7 @@ year={2020}
     
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "AMS" } }});
     </script>
     <script async src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
     
