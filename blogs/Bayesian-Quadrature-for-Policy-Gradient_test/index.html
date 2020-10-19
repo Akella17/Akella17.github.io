@@ -96,8 +96,44 @@
 <br>
 <h1 style="text-align: center; font-variant: small-caps;">Problem Formulation</h1>
 <br>
-<img src="https://akella17.github.io/img/RL/MDP_drawio.png" class="pub-banner" itemprop="image">
+
+<div id="header" style="height:15%;width:100%;">
+    <div style='float:left'>
+        <img src="https://akella17.github.io/img/RL/MDP_drawio.png" class="pub-banner" itemprop="image" width="625">
+        <!-- <img src="/e-com/images/logo.jpg" style="margin-left:15%;margin-top:5%"/> -->
+    </div>
+    <div style='float:leftt'>
+        <!-- <table border="1" width="44" style="margin-left:30%;float:top;">  -->
+        <table style="width:40%;text-align: center;border: 1px solid black;">
+          <tr>
+            <td>State-Space</td>
+            <td>$s_t \in \mathcal{S}$</td>
+          </tr>
+          <tr>
+            <td>Action-Space</td>
+            <td>$a_t \in \mathcal{A}$</td>
+          </tr>
+          <tr>
+            <td>Transition Kernel</td>
+            <td>$P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$</td>
+          </tr>
+          <tr>
+            <td>Reward Kernel</td>
+            <td>$r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$</td>
+          </tr>
+          <tr>
+            <td>Initial State Distribution</td>
+            <td>$\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$</td>
+          </tr>
+          <tr>
+            <td>Stochastic Policy</td>
+            <td>$\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$</td>
+          </tr>
+        </table>
+    </div>
+</div>
 <br>
+
 <p>
 	Consider a Markov decision process (MDP) $\langle\mathcal{S}, \mathcal{A}, P, r, \rho_0, \gamma\rangle$, where $\mathcal{S}$ is the state-space, $\mathcal{A}$ is the action-space, $P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$ is the transition kernel that maps each state-action pair to a distribution over the states $\Delta_\mathcal{S}$, $r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$ is the reward kernel, $\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$ is the initial state distribution, and $\gamma \in [0,1)$ is the discount factor. We denote by $\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$ a stochastic parameterized policy with parameters $\theta\in\Theta$. The MDP controlled by the policy $\pi_{\theta}$ induces a Markov chain over state-action pairs $z = (s,a) \in \mathcal{Z} = \mathcal{S} \times \mathcal{A}$, with an initial density $\rho^{\pi_{\theta}}_0(z_0) = \pi_{\theta}(a_0|s_0) \rho_0(s_0)$ and a transition probability distribution $P^{\pi_{\theta}}(z_t|z_{t-1}) = \pi_{\theta}(a_t|s_t) P(s_t|z_{t-1})$. The discounted state-action visitation frequency $\rho^{\pi_{\theta}}$ is defined as:
 
@@ -161,7 +197,7 @@
 
 
 <br>
-<h1 style="text-align: center; font-variant: small-caps;">Under Construction</h1>
+<h1 style="text-align: center; font-variant: small-caps;">Rough Area</h1>
 <p>
 Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or an explicit critic network (different from implicit \GP critic).
 
