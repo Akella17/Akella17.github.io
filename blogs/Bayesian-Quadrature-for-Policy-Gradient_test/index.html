@@ -75,7 +75,7 @@
       <p class="pub-authors" itemprop="author" align="center">
         
         <h2 style="font-size: 175%; text-align: center; font-variant: small-caps; color: #893a5d"><b> Accuracy &uarr; &emsp; &emsp; Variance &darr; &emsp; &emsp; Sample Efficiency &uarr; &emsp; &emsp; Reliability &uarr; </b></h2>
-</p><p align="center"><b><i>Published on 20<sup>th</sup> Oct, 2020</i></b></p><br>
+</p><p align="center"><b><i>Published on 25<sup>th</sup> Oct, 2020</i></b></p><br>
 </div>
 
 <p><i>
@@ -98,41 +98,40 @@
 <br>
 
 <div id="header" style="height:15%;width:100%;">
-    <div style='float:left'>
-        <img src="https://akella17.github.io/img/RL/MDP_drawio.png" class="pub-banner" itemprop="image" width="625">
+    <div style='float:left; width:50%; padding: 5px;'>
+        <img src="https://akella17.github.io/img/RL/MDP_drawio.png" class="pub-banner" itemprop="image">
         <!-- <img src="/e-com/images/logo.jpg" style="margin-left:15%;margin-top:5%"/> -->
     </div>
-    <div style='float:leftt'>
+    <div style='float:left; width:50%; padding: 5px;'>
         <!-- <table border="1" width="44" style="margin-left:30%;float:top;">  -->
-        <table style="width:40%;text-align: center;border: 1px solid black;">
+        <table style="text-align: center; border: 1px solid black; border-left:1px solid black;">
           <tr>
             <td>State-Space</td>
-            <td>$s_t \in \mathcal{S}$</td>
+            <td style="border-left : 1px solid black;">$s_t \in \mathcal{S}$</td>
           </tr>
           <tr>
             <td>Action-Space</td>
-            <td>$a_t \in \mathcal{A}$</td>
+            <td style="border-left : 1px solid black;">$a_t \in \mathcal{A}$</td>
           </tr>
           <tr>
             <td>Transition Kernel</td>
-            <td>$P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$</td>
+            <td style="border-left : 1px solid black;">$P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$</td>
           </tr>
           <tr>
             <td>Reward Kernel</td>
-            <td>$r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$</td>
+            <td style="border-left : 1px solid black;">$r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$</td>
           </tr>
           <tr>
             <td>Initial State Distribution</td>
-            <td>$\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$</td>
+            <td style="border-left : 1px solid black;">$\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$</td>
           </tr>
           <tr>
             <td>Stochastic Policy</td>
-            <td>$\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$</td>
+            <td style="border-left : 1px solid black;">$\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$</td>
           </tr>
         </table>
     </div>
 </div>
-<br>
 
 <p>
 	Consider a Markov decision process (MDP) $\langle\mathcal{S}, \mathcal{A}, P, r, \rho_0, \gamma\rangle$, where $\mathcal{S}$ is the state-space, $\mathcal{A}$ is the action-space, $P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$ is the transition kernel that maps each state-action pair to a distribution over the states $\Delta_\mathcal{S}$, $r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$ is the reward kernel, $\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$ is the initial state distribution, and $\gamma \in [0,1)$ is the discount factor. We denote by $\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$ a stochastic parameterized policy with parameters $\theta\in\Theta$. The MDP controlled by the policy $\pi_{\theta}$ induces a Markov chain over state-action pairs $z = (s,a) \in \mathcal{Z} = \mathcal{S} \times \mathcal{A}$, with an initial density $\rho^{\pi_{\theta}}_0(z_0) = \pi_{\theta}(a_0|s_0) \rho_0(s_0)$ and a transition probability distribution $P^{\pi_{\theta}}(z_t|z_{t-1}) = \pi_{\theta}(a_t|s_t) P(s_t|z_{t-1})$. The discounted state-action visitation frequency $\rho^{\pi_{\theta}}$ is defined as:
@@ -146,21 +145,21 @@
 	
 	\begin{equation}
 	\label{eqn:q_func_definitions}
-	Q_{\pi_{\theta}} (z_t) = \: E\Big[\sum\nolimits_{\tau=0}^{\infty} \gamma^\tau r(z_{t+\tau}) ~\Big|~ z_{t+\tau+1} \sim P^{\pi_{\theta}}(.|z_{t+\tau})\Big].
+	Q_{\pi_{\theta}} (z_t) = \: \mathbb{E}\Big[\sum\nolimits_{\tau=0}^{\infty} \gamma^\tau r(z_{t+\tau}) ~\Big|~ z_{t+\tau+1} \sim P^{\pi_{\theta}}(.|z_{t+\tau})\Big].
 	\end{equation}
 	
 	In simple words, $Q_{\pi_{\theta}} (z)$ is the expected sum of (discounted) rewards along a trajectory starting from $z = (s,a)$ and jointly-controlled by the agent's policy $\pi_{\theta}$ (<span style="color:limegreen">known</span>) and MDP's dynamics $\langle\rho_0, r, P \rangle$ (<span style="color:red">unknown</span>). This notation allows us to conveniently formulate the expected return $J(\theta)$ under $\pi_{\theta}$ simply as the average $Q_{\pi_{\theta}}$ value of MDP's initial states:
 	
 	\begin{equation}
 	\label{eqn:old_pg_objective_definitions}
-	J(\theta) = E_{z_0\sim\rho^{\pi_{\theta}}_0}\left[Q_{\pi_{\theta}}(z_0)\right] = E_{s_0\sim\rho_0}\left[ E_{a_0\sim \pi_{\theta}(.|s_0)} \left[ Q_{\pi_{\theta}}(s_0, a_0) \right] \right].
+	J(\theta) = \mathbb{E}_{z_0\sim\rho^{\pi_{\theta}}_0}\left[Q_{\pi_{\theta}}(z_0)\right] = \mathbb{E}_{s_0\sim\rho_0}\left[ \mathbb{E}_{a_0\sim \pi_{\theta}(.|s_0)} \left[ Q_{\pi_{\theta}}(s_0, a_0) \right] \right].
 	\end{equation}
 
 	However, the gradient of $J(\theta)$ with respect to policy parameters $\theta$ cannot be directly computed from this formulation. The policy gradient theorem (<a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Sutton et al. 2000</a>) provides an analytical expression for the gradient of the expected return $J(\theta)$, as:
 	
 	\begin{equation}
 	\label{eqn:policy_gradient_theorem}
-	\displaystyle \nabla_{\theta} J(\theta) = \int_{\mathcal{Z}} \rho^{\pi_\theta}(z) \nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z) dz = E_{z \sim \rho^{\pi_\theta}}\big[\nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z)\big],
+	\displaystyle \nabla_{\theta} J(\theta) = \int_{\mathcal{Z}} \rho^{\pi_\theta}(z) \nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z) dz = \mathbb{E}_{z \sim \rho^{\pi_\theta}}\big[\nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z)\big],
 	\end{equation}
 	
 	<b>Note</b> that the initial state distribution $\rho_0(s)$, initial state-action density $\rho^{\pi_{\theta}}_0(z)$, and the discounted state-action visitation frequency $\rho^{\pi_{\theta}} (z)$ have different definitions. Nevertheless, the exact evaluation of the PG integral in Eq. \ref{eqn:policy_gradient_theorem} is often intractable for MDPs with a large (or continuous) state or action space. This is because $Q_{\pi_{\theta}} (z)$ and $\rho^{\pi_{\theta}}$ cannot be computed exactly due to their dependence on the MDP's <span style="color:red">unknown</span> dynamics. $Q_{\pi_{\theta}} (z)$ is generally computed from Monte-Carlo policy rollouts (a.k.a TD($1$) estimates), function approximation (e.g. TD($0$), TD($\lambda$) estimates), or a hybrid of both, i.e. advantage function (e.g. <a href="https://arxiv.org/abs/1602.01783">A2C</a>, <a href="https://arxiv.org/abs/1506.02438">GAE</a>). While $\rho^{\pi_{\theta}}$ is unknown, sampling from $\rho^{\pi_{\theta}}$ can be simulated by running the policy $\pi_{\theta}$ in the environment. Thus, in practice, the PG integral needs to be approximated using a finite set of samples $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$.
@@ -180,9 +179,9 @@
 
 	where $\mathbf{u}(z) = \nabla_{\theta} \log \pi_{\theta} (a|s)$ is the score function, a $|\Theta|$ dimensional vector ($|\Theta|$ is the number of policy parameters). To keep the expressions concise, the function evaluations at sample locations $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$ are grouped into $\mathbf{U} = [ \mathbf{u}(z_1), ..., \mathbf{u}(z_n)]$, a $|\Theta| \times n$ dimensional matrix, and $\mathbf{Q} = [Q_{\pi_\theta}(z_1),...,Q_{\pi_\theta}(z_n)]$, an $n$ dimensional vector. Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or function approximation.<br><br>
 
-	MC method returns the gradient mean evaluated at sample locations, which, according to the central limit theorem (CLT), is an unbiased estimate of the true gradient. However, CLT also suggests that the MC estimates suffer from a slow convergence rate ($n^{-1/2}$) and high variance, necessitating a large sample size $n$ for reliable PG estimation (<a href="https://arxiv.org/abs/1811.02553">Ilyas et al., 2018</a>). Yet, MC methods are more computationally efficient than their sample-efficient alternatives, making them ubiquitous in PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>).<br><br>
+  One disadvantage of MC-PG is that it returns stochastic gradient estimates with non-uniform gradient uncertainty, i.e., the MC estimator is more uncertain about the stepsize of some gradient components than others. Thus, MC-PG occasionally take large steps along directions of high uncertainty, resulting in a bad policy update and catastrophic performance degradation (<b><span style="color: #893a5d">reliability &darr;</span></b>). In addition, MC-PG is a point estimation method and hence does not quantify the uncertainty in its gradient estimation. Thus, the only way to make MC-PG estimates more robust to large policy updates is by increasing the number of samples (<b><span style="color: #893a5d">sample efficiency &darr;</span></b>).<br><br>
 
-	Another problem with MC-PG is that it returns stochastic gradient estimates with non-uniform gradient uncertainty, i.e., the MC estimator is more uncertain about the stepsize of some gradient components than others. Moreover, MC-PG is a point estimation method and hence does not quantify the uncertainty in its gradient estimation. Thus, MC-PG occasionally take large steps along directions of high uncertainty, resulting in a bad policy update and catastrophic performance degradation.
+	On the other hand, MC method returns the gradient mean evaluated at sample locations, which, according to the central limit theorem (CLT), is an unbiased estimate of the true gradient. However, CLT also suggests that the MC estimates suffer from a slow convergence rate ($n^{-1/2}$) (<b><span style="color: #893a5d">accuracy &darr;</span></b>) and high variance (<b><span style="color: #893a5d">variance &uarr;</span></b>), necessitating a large sample size $n$ (<b><span style="color: #893a5d">sample efficiency &darr;</span></b>) for reliable PG estimation (<a href="https://arxiv.org/abs/1811.02553">Ilyas et al., 2018</a>) (<b><span style="color: #893a5d">reliability &darr;</span></b>). Yet, MC method is significantly more computationally efficient than its sample-efficient alternatives (like BQ), making it the predominantly used PG estimator in most deep PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>).
 
 </p>
 
@@ -190,16 +189,179 @@
 <h1 style="text-align: center; font-variant: small-caps;">Bayesian Quadrature</h1>
 <br>
 <p>
-	
+  <b>Bayesian quadrature (BQ)</b> (<a href="https://www.sciencedirect.com/science/article/abs/pii/037837589190002V">O'Hagan, 1991</a>) is an approach from <i>probabilistic numerics</i> (<a href="https://royalsocietypublishing.org/doi/10.1098/rspa.2015.0142">Hennig et al., 2015</a>) that converts numerical integration into a Bayesian inference problem. But before we dive into the BQ method, let me first informally introduce the idea behind it:
+  
+  <table>
+    <tr>
+      <td style="text-align: center;"><b>Step 1:</b></td>
+      <td style="text-align: left;"><i>Choose</i> a function approximation to model the integrand (the function you wish to integrate).</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;"><b>Step 2:</b></td>
+      <td style="text-align: left;">Learn a <i>good approximation</i> of the integrand by fitting this model to sample data.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;"><b>Step 3:</b></td>
+      <td style="text-align: left;">Substitute the actual integrand with the learned function approximation model, and solve the integral in <i>closed-form</i>.</td>
+    </tr>
+  </table>
+
+  Okay, I might have oversimplified BQ! While <b>Steps 1-2</b> are fairly general, <b>Step 3</b> only supports select few classes of function approximators. For instance, black-box function approximators such as neural networks cannot be integrated over their inputs in closed-form. In the following paragraphs, I will brief the algorithm-design choices in BQ that allow us to obtain a closed-form solution to the PG integral equation.
+</p>
+<p>
+  <b>Step 1:</b> <i>Formulate a prior stochastic model over the integrand.</i><br>
+  In the case of a PG integral, the integrand is the action-value function $Q_{\pi_\theta}$ and the function approximator is a Gaussian process (GP), a non-parametric model that is defined using a prior mean and covariance function. More specifically, the GP prior placed on the $Q_{\pi_\theta}$ function has zero mean $\mathbb{E}\left[ Q_{\pi_\theta}(z) \right] = 0$, a prior covariance function $k(z_p,z_q) = \text{Cov} [Q_{\pi_\theta}(z_p),Q_{\pi_\theta}(z_q)]$, and observation noise $\sigma$. This is a common prior in BQ with many appealing properties, such as the joint distribution over any finite number of action-values (indexed by the state-action inputs, $z \in \mathcal{Z}$) is Gaussian:
+  
+  \begin{equation}
+  \label{eqn:appendix_Q_function_prior}
+  \mathbf{Q} = [Q_{\pi_\theta}(z_1),...,Q_{\pi_\theta}(z_n)] \sim \mathcal{N}(0,\mathbf{K}), \text{where } \mathbf{K} \text{ is the Gram matrix with entries } \mathbf{K}_{p,q} = k(z_p,z_q).
+  \end{equation}
+
+  <b>Step 2:</b> <i>This GP prior is conditioned (Bayes rule) on the observed samples $\; \mathcal{D} = \{z_i\}_{i=1}^{n}$ to obtain the posterior moments of $\; Q_{\pi_\theta}$:</i><br>
+
+  \begin{align}
+  \mathbb{E}\left[ Q_{\pi_\theta}(z)| \mathcal{D} \right] &= \mathbf{k}(z)^\top (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{Q},\nonumber
+  \\
+  \text{Cov}\left[ Q_{\pi_\theta}(z_1), Q_{\pi_\theta}(z_2)| \mathcal{D} \right] &= k  (z_1,z_2) - \mathbf{k}(z_1)^\top (\mathbf{K} + \sigma^2\mathbf{I})^{-1} \mathbf{k}(z_2), \label{eqn:appendix_Q_function_posterior}
+  \\
+  \text{where } \mathbf{k}(z) = [k (z_1,z &), ..., k(z_n, z)], \; \mathbf{K} = [\mathbf{k}(z_1), ..., \mathbf{k}(z_n)]. \nonumber
+  \end{align}
+
+  To clarify, $k(z, z')$ is a scalar, $\mathbf{k}(z)$ is an $n$ dimensional vector, $\mathbf{K}$ is an $n \times n$ dimensional matrix, and $\mathbf{Q}$ is an $n$ dimensional vector (same as in MC-PG). In Eq. \ref{eqn:appendix_Q_function_posterior}, the GP model approximates the $Q_{\pi_\theta}$ function (mean) and the uncertainty in its estimation (covariance), in a way that simplifies <b>Step 3</b>.<br><br>
+
+  <b>Step 3:</b> <i>Since the transformation from $\; Q_{\pi_\theta}(z)$ to $\; \nabla_{\theta} J(\theta)$ happens through a linear integral operator </i>(Eq. \ref{eqn:policy_gradient_theorem})<i>, the posterior moments of $\; Q_{\pi_\theta}$ can be used to compute a Gaussian approximation of $\;\nabla_{\theta} J(\theta)$:</i>
+
+  \begin{align}
+      & \quad \qquad \displaystyle \mathbf{L}_{\theta}^{BQ} = \mathbb{E} \left[ \nabla_{\theta} J(\theta) | \mathcal{D} \right] =\displaystyle \int \rho^{\pi_\theta}(z) \mathbf{u}(z) \mathbb{E} \left[ Q_{\pi_\theta}(z) | \mathcal{D} \right] dz \nonumber
+      \\
+      &  \quad \qquad \qquad = \displaystyle \left( \int \rho^{\pi_\theta}(z) \mathbf{u}(z) \mathbf{k}(z)^\top dz\right) (\mathbf{K} +\sigma^2\mathbf{I})^{-1}\mathbf{Q} \label{eqn:appendix_BayesianQuadratureIntegral}
+      \\
+      \displaystyle \mathbf{C}_{\theta}^{BQ} &= \text{Cov}[ \nabla_{\theta} J( \theta) | \mathcal{D}] = \displaystyle \int \rho^{\pi_\theta}(z_1) \rho^{\pi_\theta}(z_2) \mathbf{u}(z_1) \text{Cov}[ Q_{\pi_\theta}(z_1), Q_{\pi_\theta}(z_2)| \mathcal{D}] \mathbf{u}(z_2)^\top dz_1 dz_2,\nonumber
+      \\
+      &= \displaystyle \int \rho^{\pi_\theta}(z_1) \rho^{\pi_\theta}(z_2) \mathbf{u}(z_1) \Big( k(z_1,z_2) - \mathbf{k}(z_1)^\top (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{k}(z_2) \Big) \mathbf{u}(z_2)^\top dz_1 dz_2,\nonumber
+  \end{align}
+
+  where the posterior mean $\mathbf{L}_{\theta}^{BQ}$ can be interpreted as the PG estimate and the posterior covariance $\mathbf{C}_{\theta}^{BQ}$ quantifies the uncertainty in PG estimation. However, we still do not have a closed-form solution to PG because the integrals in  Eq. \ref{eqn:appendix_BayesianQuadratureIntegral} cannot be solved analytically for an arbitrary GP prior covariance function $k(z_1, z_2)$. <a href="https://icml.cc/imls/conferences/2007/proceedings/papers/458.pdf">Ghavamzadeh & Engel (2007)</a> showed that these integrals have analytical solutions when the GP kernel $k$ is the additive composition of an arbitrary state kernel $k_s$ and the (indispensable) Fisher kernel $k_f$:
+  
+  \begin{align}
+  \label{eqn:appendix_kernel_definitions}
+      k(z_1,z_2) = c_1 k_s(s_1,s_2) + c_2 k_f(z_1,z_2), \quad k_f(z_1,z_2) &= \mathbf{u}(z_1)^\top \mathbf{G}^{-1} \mathbf{u}(z_2),
+  \end{align}
+
+  where $\mathbf{G}$ is the Fisher information matrix of the policy $\pi_\theta$. Note that $c_1, c_2$ are redundant hyperparameters that are simply introduced for better explanation of BQ-PG. Now, using the following definitions:
+
+  \begin{eqnarray}
+  \label{eqn:appendix_kernel_equations}
+  \mathbf{k}_f(z) = \mathbf{U}^\top\mathbf{G}^{-1} \mathbf{u}(z), \ \ \mathbf{K}_f = \mathbf{U}^\top \mathbf{G}^{-1} \mathbf{U}, \ \ \mathbf{K} = c_1 \mathbf{K}_s + c_2 \mathbf{K}_f, \ \ 
+  \mathbf{G} = \mathbb{E}_{z \sim \rho^{\pi_\theta}} [\mathbf{u}(z) \mathbf{u}(z)^\top] \approx \frac{1}{n} \mathbf{U}\mathbf{U}^\top,
+  \end{eqnarray}
+
+  the closed-form expressions for PG estimate $\mathbf{L}_{\theta}^{BQ}$ and its uncertainty $\mathbf{C}_{\theta}^{BQ}$ are obtained as follows,
+  <a class="btn btn-outline btn-warning btn-xs",
+  onclick="
+      var div = document.getElementById('DBQPG_proof');
+      if (div.style.display !== 'none') {
+          div.style.display = 'none';
+      }
+      else {
+          div.style.display = 'block';
+      }
+  ">
+    <b>&larr; Proof &rarr;</b>
+  </a>
+  
+  <div id = "DBQPG_proof", class="boxed", style="border: 1px solid green;padding: 10px;background-color:#fed8b1;display:none">
+    <h2 style="text-align: center;"><b>Useful Identities</b></h2>
+    Expectation of the score vector $\mathbf{u}(z) = \nabla_{\theta} \log \pi_{\theta}(a|s)$ under the policy distribution $\pi_{\theta}(a|s)$ is $\mathbf{0}$:
+    
+    \begin{align}
+    \mathbb{E}_{a \sim \pi_\theta(.|s)} \left[ \mathbf{u}(z) \right] &= \mathbb{E}_{a \sim \pi_{\theta}(.|s)} \left[ \nabla_{\theta} \log \pi_{\theta}(a|s) \right] = \int \pi_{\theta}(a|s) \nabla_{\theta} \log \pi_{\theta}(a|s) da \nonumber
+    \\
+    &= \int \pi_{\theta}(a|s) \frac{\nabla_{\theta} \pi_{\theta}(a|s)}{\pi_{\theta}(a|s)} da = \int \nabla_{\theta} \pi_{\theta}(a|s) da \nonumber
+    \\
+    &= \nabla_{\theta} \left( \int \pi_{\theta}(a|s) da \right) = \nabla_{\theta} (1) = \mathbf{0} \label{eqn:appendix_logprob_expectiation} \nonumber
+    \end{align}
+    
+    This identify can further be used to derive the following results:
+
+    \begin{equation}
+    \mathbb{E}_{a \sim \pi_\theta(.|s)} \left[ k_s(s, s') u(z) \right] = 0, \qquad \mathbb{E}_{a \sim \pi_\theta(.|s)} \left[ \mathbf{k}_s(s) u(z) \right] = 0 \nonumber
+    \end{equation}
+
+    <!-- \begin{align}
+    \label{eqn:appendix_fisher_expectation}
+    \begin{split}
+    \mathbb{E}_{a \sim \pi_\theta(.|s)} \left[ k_f(z,z') \right] &= \mathbb{E}_{a \sim \pi_\theta(.|s)} \left[ \mathbf{u}(z)^\top \mathbf{G}^{-1} \mathbf{u}(z') \right] = \mathbb{E}_{a \sim \pi_\theta(.|s)} \left[ \mathbf{u}(z)^\top \right]  \mathbf{G}^{-1} \mathbf{u}(z') = 0
+    \end{split}\nonumber
+    \end{align} -->
+    <br>
+    <h2 style="text-align: center;"><b>BQ-PG Proof</b></h2>
+    \begin{align}
+    \label{eqn:appendix_pg_mean_closedform}
+    \begin{split}
+        \displaystyle \mathbf{L}_{\theta}^{BQ} &= \mathbb{E} \left[ \nabla_{\theta} J(\theta) | \mathcal{D} \right] = \displaystyle \int \rho^{\pi_\theta}(z) \mathbf{u}(z) \mathbb{E} \left[ Q_{\pi_\theta}(z) | \mathcal{D} \right] dz
+        \\
+        &= \mathbb{E}_{z \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z) \mathbb{E} [Q_{\pi_\theta}(z) | \mathcal{D}] \right] 
+        \\
+        &= \mathbb{E}_{z \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z) \mathbf{k}(z)^\top \right] (\mathbf{K} +\sigma^2\mathbf{I})^{-1}\mathbf{Q}
+        \\
+        &= \left( c_1 E_{z \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z) \mathbf{k}_s(s)^\top \right] + c_2 E_{z \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z) \mathbf{k}_f(z)^\top \right] \right) (\mathbf{K} +\sigma^2\mathbf{I})^{-1}\mathbf{Q}
+        \\
+        &= c_2 E_{z \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z) \mathbf{k}_f(z)^\top \right] (\mathbf{K} +\sigma^2\mathbf{I})^{-1}\mathbf{Q}
+        \\
+        &= c_2 E_{z \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z) \mathbf{u}(z)^\top \right] \mathbf{G}^{-1} \mathbf{U} (\mathbf{K} +\sigma^2\mathbf{I})^{-1}\mathbf{Q}
+        \\
+        &= c_2 \mathbf{G} \: \mathbf{G}^{-1} \mathbf{U} (c_1\mathbf{K}_s + c_2\mathbf{K}_f +\sigma^2\mathbf{I})^{-1}\mathbf{Q}
+        \\
+        &= c_2 \mathbf{U} (c_1\mathbf{K}_s + c_2\mathbf{K}_f +\sigma^2\mathbf{I})^{-1}\mathbf{Q}
+        \\
+
+
+        \\
+    \displaystyle \mathbf{C}_{\theta}^{BQ} &= \text{Cov} \left[ \nabla_{\theta} J(\theta) | \mathcal{D} \right] = \displaystyle \int dz_1 dz_2 \rho^{\pi_\theta}(z_1) \rho^{\pi_\theta}(z_2) \mathbf{u}(z_1) \text{Cov}\left[ Q_{\pi_\theta}(z_1), Q_{\pi_\theta}(z_2)| \mathcal{D} \right] \mathbf{u}(z_2)^\top
+    \\
+        &= \mathbb{E}_{z_1,z_2 \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z_1) \text{Cov}\left[ Q_{\pi_\theta}(z_1), Q_{\pi_\theta}(z_2)| \mathcal{D} \right] \mathbf{u}(z_2)^\top \right]
+        \\
+        &= \mathbb{E}_{z_1,z_2 \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z_1) \Big( k(z_1,z_2) - \mathbf{k}(z_1)^\top (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{k}(z_2) \Big) \mathbf{u}(z_2)^\top \right]
+        \\
+        &= \mathbb{E}_{z_1,z_2 \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z_1) \Big( c_2 k_f(z_1,z_2) - c_2^2 \mathbf{k}_f(z_1)^\top (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{k}_f(z_2) \Big) \mathbf{u}(z_2)^\top \right]
+        \\
+        &= \mathbb{E}_{z_1,z_2 \sim \rho^{\pi_\theta}} \left[ \mathbf{u}(z_1) \mathbf{u}(z_1)^\top \Big( c_2 \mathbf{G}^{-1} - c_2^2 \mathbf{G}^{-1}\mathbf{U} (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{U}^\top\mathbf{G}^{-1} \Big) \mathbf{u}(z_2) \mathbf{u}(z_2)^\top \right]
+        \\
+        &= \mathbb{E}_{z_1 \sim \rho^{\pi_\theta}} [\mathbf{u}(z_1) \mathbf{u}(z_1)^\top] \Big( c_2 \mathbf{G}^{-1}
+        - c_2^2 \mathbf{G}^{-1}\mathbf{U} (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{U}^\top\mathbf{G}^{-1} \Big) \mathbb{E}_{z_2 \sim \rho^{\pi_\theta}} [\mathbf{u}(z_2) \mathbf{u}(z_2)^\top]
+        \\
+        &= \mathbf{G} \Big( c_2 \mathbf{G}^{-1} - c_2^2 \mathbf{G}^{-1}\mathbf{U} (\mathbf{K} +\sigma^2\mathbf{I})^{-1} \mathbf{U}^\top\mathbf{G}^{-1} \Big) \mathbf{G}
+        \\
+        &= c_2 \mathbf{G} - c_2^2\mathbf{U} (c_1\mathbf{K}_s + c_2\mathbf{K}_f +\sigma^2\mathbf{I})^{-1} \mathbf{U}^\top
+        \\
+        \\
+    \end{split}\nonumber
+    \end{align}
+  </div>
+
+  \begin{equation}\label{eq:GP_grad}
+      \displaystyle \mathbf{L}_{\theta}^{BQ} = \displaystyle c_2 \mathbf{U} (c_1\mathbf{K_s} + c_2\mathbf{K_f} +\sigma^2\mathbf{I})^{-1}\mathbf{Q}, \qquad   \displaystyle \mathbf{C}_{\theta}^{BQ} = c_2 \mathbf{G} - c_2^2 \mathbf{U} \left( c_1\mathbf{K_s} + c_2\mathbf{K_f} + \sigma^2 \mathbf{I} \right)^{-1} \mathbf{U}^\top.
+  \end{equation}
 </p>
 
 
+<br>
+<h1 style="text-align: center; font-variant: small-caps;">Kernel Selection in BQ-PG</h1>
+  <div style='float:left; width:40%; padding: 25px;'>
+      <img src="https://akella17.github.io/blog/Bayesian-Quadrature-for-Policy-Gradient_test/Brace-yourself-Winter.jpg" class="pub-banner" itemprop="image">
+      <!-- <img src="/e-com/images/logo.jpg" style="margin-left:15%;margin-top:5%"/> -->
+  </div>
+<br>
+<p>
+  Brace yourself! You have now reached the best part of this post.
+</p>
 
 
 <br>
 <h1 style="text-align: center; font-variant: small-caps;">Rough Area</h1>
 <p>
-Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or an explicit critic network (different from implicit \GP critic).
+Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or an explicit critic network (different from implicit GP critic).
 
 	In particular, this post only covers the fundamentals of BQ-PG, its connection to Monte-Carlo estimation and some other interesting findings. To those less familiar with policy gradient algorithms, I recommend checking-out Lilian Weng's awesome <a href="https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html">blog post</a> (for this post, reading upto <a href="https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html#proof-of-policy-gradient-theorem">PG theorem</a> is sufficient). While all this wording might seem confusing, but the underlying idea is very easy to grasp. 
 </p>
