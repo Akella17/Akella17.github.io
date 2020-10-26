@@ -138,7 +138,7 @@
   <div id="header" style="height:15%;width:100%;">
       
       <div style='float:left; width:50%; padding: 5px;'>
-          <img src="projects/DBQPG/MDP_drawio.png" class="pub-banner" itemprop="image">
+          <img src="/projects/DBQPG/MDP_drawio.png" class="pub-banner" itemprop="image">
       </div>
 
       <div style='float:left; width:50%; padding: 5px;'>
@@ -590,7 +590,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
 <!-- <h2>Scaling BQ-PG to large sample sizes:</h2> -->
 <div style='float:right; width:60%; padding: 25px;'>
   <figure>
-    <img src="projects/DBQPG/DBQPG-Algo.png" class="pub-banner" itemprop="image">
+    <img src="/projects/DBQPG/DBQPG-Algo.png" class="pub-banner" itemprop="image">
     
     <figcaption style="text-align: center;">
       A summary of fast kernel computation methods used in the DBQPG algorithm.
@@ -674,7 +674,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
 
   <div style='float:left; width:60%; padding: 25px;'>
     <figure>
-      <img src="projects/DBQPG/DBQPG-diagram.png" class="pub-banner" itemprop="image">
+      <img src="/projects/DBQPG/DBQPG-diagram.png" class="pub-banner" itemprop="image">
     <figcaption style="text-align: center;">
         Overview of practical DBQPG algorithm.
       </figcaption>
@@ -712,7 +712,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   <div style='float:left; width:50%; padding: 15px;'>
     <figure>
       <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
-      <img src="projects/DBQPG/UAPG-diagram.png" class="pub-banner" itemprop="image">
+      <img src="/projects/DBQPG/UAPG-diagram.png" class="pub-banner" itemprop="image">
       
       <figcaption style="text-align: center;">
         Illustration of DBQPG and UAPG updates along the first two principal components (PCs) of the gradient covariance matrix.
@@ -792,17 +792,17 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   <figure>
     <div style='float:left; width:33.33%; padding: 15px;'>
       <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
-      <img src="projects/DBQPG/DBQPG_ablation.png" class="pub-banner" itemprop="image">
+      <img src="/projects/DBQPG/DBQPG_ablation.png" class="pub-banner" itemprop="image">
     </div>
 
     <div style='float:left; width:33.33%; padding: 15px;'>
       <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
-      <img src="projects/DBQPG/Kernel_Choice.png" class="pub-banner" itemprop="image">
+      <img src="/projects/DBQPG/Kernel_Choice.png" class="pub-banner" itemprop="image">
     </div>
 
     <div style='float:left; width:33.33%; padding: 15px;'>
       <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
-      <img src="projects/DBQPG/Compute_plot.png" class="pub-banner" itemprop="image">
+      <img src="/projects/DBQPG/Compute_plot.png" class="pub-banner" itemprop="image">
     </div>
     <figcaption style="text-align: justify;">
       <b>(Left)</b> Ablation study to understand the relative improvement from (i) deep RBF kernel vs base RBF kernel and (ii) SKI vs traditional inducing points method. <b>(Middle)</b> Comparison between common state kernel $k_s$ choices. <b>(Right)</b>  Wall-clock time comparison for PG computation using MC, DBQPG and UAPG estimators.
@@ -823,7 +823,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   <figure>
     <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
     <center>
-    <img src="projects/DBQPG/accuracy_variance_plot.png" alt="Accuracy Plot | Variance_Plot"/ width="90%">
+    <img src="/projects/DBQPG/accuracy_variance_plot.png" alt="Accuracy Plot | Variance_Plot"/ width="90%">
     </center>
     <figcaption style="text-align: justify;">
       An empirical analysis of the quality of policy gradient estimates as a function of the state-action sample size. The experiments are conducted for $0^{th}$,  $150^{th}$, $300^{th}$, and $450^{th}$ iteration along the training phase of DBQPG (vanilla PG) algorithm in MuJoCo Swimmer-v2 environment. All the results have been averaged over $25$ repeated gradient measurements across $100$ random runs. (a) The accuracy plot results are obtained w.r.t the "true gradient", which is computed using MC estimates of $10^6$ state-action pairs. (b) The normalized variance is computed using the ratio of trace of empirical gradient covariance matrix and squared norm of gradient mean.
@@ -846,17 +846,17 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   <figure>
     <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
     <center>
-    <img src="projects/DBQPG/VanillaPG_plot.png" alt="VanillaPG_Plot"/>
+    <img src="/projects/DBQPG/VanillaPG_plot.png" alt="VanillaPG_Plot"/>
     <figcaption style="text-align: center;">
       Vanilla Policy Gradient
     </figcaption>
     <hr>
-    <img src="projects/DBQPG/NPG_plot.png" alt="NPG_Plot"/>
+    <img src="/projects/DBQPG/NPG_plot.png" alt="NPG_Plot"/>
     <figcaption style="text-align: center;">
       Natural Policy Gradient
     </figcaption>
     <hr>
-    <img src="projects/DBQPG/TRPO_plot.png" alt="TRPO_Plot"/>
+    <img src="/projects/DBQPG/TRPO_plot.png" alt="TRPO_Plot"/>
     </center>
     <figcaption style="text-align: center;">
       Trust Region Policy Optimization
