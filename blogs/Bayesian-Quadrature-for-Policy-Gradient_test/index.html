@@ -75,7 +75,9 @@
       <p class="pub-authors" itemprop="author" align="center">
         
         <h2 style="font-size: 175%; text-align: center; font-variant: small-caps; color: #893a5d"><b> Accuracy &uarr; &emsp; &emsp; Variance &darr; &emsp; &emsp; Sample Efficiency &uarr; &emsp; &emsp; Reliability &uarr; </b></h2>
-</p><p align="center"><b><i>Published on 26<sup>th</sup> Oct, 2020</i></b></p><br>
+</p>
+<!-- <p align="center"><b><i>Published on 26<sup>th</sup> Oct, 2020</i></b></p><br> -->
+<br><br>
 </div>
 
 <p><i>
@@ -177,35 +179,35 @@
 </figure>
 
 <p>
-	Consider a Markov decision process (MDP) $\langle\mathcal{S}, \mathcal{A}, P, r, \rho_0, \gamma\rangle$, where $\mathcal{S}$ is the state-space, $\mathcal{A}$ is the action-space, $P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$ is the transition kernel that maps each state-action pair to a distribution over the states $\Delta_\mathcal{S}$, $r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$ is the reward kernel, $\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$ is the initial state distribution, and $\gamma \in [0,1)$ is the discount factor. $\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$ is used to denote a stochastic parameterized policy with parameters $\theta\in\Theta$. The MDP controlled by the policy $\pi_{\theta}$ induces a Markov chain over state-action pairs $z = (s,a) \in \mathcal{Z} = \mathcal{S} \times \mathcal{A}$, with an initial density $\rho^{\pi_{\theta}}_0(z_0) = \pi_{\theta}(a_0|s_0) \rho_0(s_0)$ and a transition probability distribution $P^{\pi_{\theta}}(z_t|z_{t-1}) = \pi_{\theta}(a_t|s_t) P(s_t|z_{t-1})$. The discounted state-action visitation frequency $\rho^{\pi_{\theta}}$ is defined as:
+	Consider a Markov decision process (MDP) $\langle\mathcal{S}, \mathcal{A}, P, r, \rho_0, \gamma\rangle$, where $\mathcal{S}$ is the state-space, $\mathcal{A}$ is the action-space, $P : \mathcal{S} \times \mathcal{A} \rightarrow \Delta_\mathcal{S}$ is the transition kernel that maps each state-action pair to a distribution over the states $\Delta_\mathcal{S}$, $r: \mathcal{S} \times \mathcal{A} \rightarrow \mathbb{R}$ is the reward kernel, $\rho_0:\mathcal{S} \rightarrow \Delta_\mathcal{S}$ is the initial state distribution, and $\gamma \in [0,1)$ is the discount factor. $\pi_{\theta}: \mathcal{S} \rightarrow \Delta_\mathcal{A}$ denotes a stochastic parameterized policy with parameters $\theta\in\Theta$. The MDP controlled by the policy $\pi_{\theta}$ induces a Markov chain over state-action pairs $z = (s,a) \in \mathcal{Z} = \mathcal{S} \times \mathcal{A}$, with an initial density $\rho^{\pi_{\theta}}_0(z_0) = \pi_{\theta}(a_0|s_0) \rho_0(s_0)$ and a transition probability distribution $P^{\pi_{\theta}}(z_t|z_{t-1}) = \pi_{\theta}(a_t|s_t) P(s_t|z_{t-1})$. The discounted state-action visitation frequency $\rho^{\pi_{\theta}}$ is defined as:
 
 	\begin{equation}
 	\label{eqn:state_visitation}
 	P^{\pi_{\theta}}_t(z_t) = \int_{\mathcal{Z}^t} dz_0 ... dz_{t-1} P^{\pi_{\theta}}_0(z_0) \prod_{\tau=1}^t P^{\pi_{\theta}}(z_\tau|z_{\tau-1}), \qquad \rho^{\pi_{\theta}}(z) = \sum_{t=0}^{\infty} \gamma^t P^{\pi_{\theta}}_t(z).
 	\end{equation}
 
-	I will be using the standard definition of action-value function $Q_{\pi_{\theta}}$:
+	The action-value function $Q_{\pi_{\theta}} (z)$ denotes the expected sum of (discounted) rewards along a trajectory starting from $z = (s,a)$ and jointly-controlled by the agent's policy $\pi_{\theta}$ (<span style="color:limegreen">known</span>) and MDP's dynamics $\langle\rho_0, r, P \rangle$ (<span style="color:red">unknown</span>):
 	
 	\begin{equation}
 	\label{eqn:q_func_definitions}
 	Q_{\pi_{\theta}} (z_t) = \: \mathbb{E}\Big[\sum\nolimits_{\tau=0}^{\infty} \gamma^\tau r(z_{t+\tau}) ~\Big|~ z_{t+\tau+1} \sim P^{\pi_{\theta}}(.|z_{t+\tau})\Big].
 	\end{equation}
 	
-	In simple words, $Q_{\pi_{\theta}} (z)$ is the expected sum of (discounted) rewards along a trajectory starting from $z = (s,a)$ and jointly-controlled by the agent's policy $\pi_{\theta}$ (<span style="color:limegreen">known</span>) and MDP's dynamics $\langle\rho_0, r, P \rangle$ (<span style="color:red">unknown</span>). This notation allows us to conveniently formulate the expected return $J(\theta)$ under $\pi_{\theta}$ simply as the average $Q_{\pi_{\theta}}$ value of MDP's initial states:
+	This notation allows us to conveniently formulate the expected return $J(\theta)$ under $\pi_{\theta}$ simply as the average $Q_{\pi_{\theta}}$ value of MDP's initial states:
 	
 	\begin{equation}
 	\label{eqn:old_pg_objective_definitions}
 	J(\theta) = \mathbb{E}_{z_0\sim\rho^{\pi_{\theta}}_0}\left[Q_{\pi_{\theta}}(z_0)\right] = \mathbb{E}_{s_0\sim\rho_0}\left[ \mathbb{E}_{a_0\sim \pi_{\theta}(.|s_0)} \left[ Q_{\pi_{\theta}}(s_0, a_0) \right] \right].
 	\end{equation}
 
-	However, the gradient of $J(\theta)$ with respect to policy parameters $\theta$ cannot be directly computed from this formulation. The policy gradient theorem (<a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Sutton et al. 2000</a>) provides an analytical expression for the gradient of the expected return $J(\theta)$, as:
+	However, the gradient of $J(\theta)$ with respect to policy parameters $\theta$ cannot be directly computed from this formulation. The <i>policy gradient theorem</i> (<a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Sutton et al. 2000</a>) provides an analytical expression for the gradient of the expected return $J(\theta)$, as:
 	
 	\begin{equation}
 	\label{eqn:policy_gradient_theorem}
 	\displaystyle \nabla_{\theta} J(\theta) = \int_{\mathcal{Z}} \rho^{\pi_\theta}(z) \nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z) dz = \mathbb{E}_{z \sim \rho^{\pi_\theta}}\big[\nabla_{\theta} \log \pi_{\theta} (a|s) Q_{\pi_\theta}(z)\big],
 	\end{equation}
 	
-	<b>Note</b> that the initial state distribution $\rho_0(s)$, initial state-action density $\rho^{\pi_{\theta}}_0(z)$, and the discounted state-action visitation frequency $\rho^{\pi_{\theta}} (z)$ have different definitions. Nevertheless, the exact evaluation of the PG integral in Eq. \ref{eqn:policy_gradient_theorem} is often intractable for MDPs with a large (or continuous) state or action space. This is because $Q_{\pi_{\theta}} (z)$ and $\rho^{\pi_{\theta}}$ cannot be computed exactly due to their dependence on the MDP's <span style="color:red">unknown</span> dynamics. $Q_{\pi_{\theta}} (z)$ is generally computed from Monte-Carlo policy rollouts (a.k.a TD($1$) estimates), function approximation (e.g. TD($0$), TD($\lambda$) estimates), or a hybrid of both, i.e. advantage function (e.g. <a href="https://arxiv.org/abs/1602.01783">A2C</a>, <a href="https://arxiv.org/abs/1506.02438">GAE</a>). While $\rho^{\pi_{\theta}}$ is unknown, sampling from $\rho^{\pi_{\theta}}$ can be simulated by running the policy $\pi_{\theta}$ in the environment. Thus, in practice, the PG integral needs to be approximated using a finite set of samples $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$.
+	<b>Note</b> that the initial state distribution $\rho_0(s)$, initial state-action density $\rho^{\pi_{\theta}}_0(z)$, and the discounted state-action visitation frequency $\rho^{\pi_{\theta}} (z)$ have different definitions. Nevertheless, the exact evaluation of the PG integral in Eq. \ref{eqn:policy_gradient_theorem} is often intractable for MDPs with a large (or continuous) state or action space. This is because $Q_{\pi_{\theta}} (z)$ and $\rho^{\pi_{\theta}}$ cannot be computed exactly due to their dependence on the MDP's <span style="color:red">unknown</span> dynamics. In practice, $Q_{\pi_{\theta}} (z)$ is generally computed from Monte-Carlo policy rollouts (a.k.a TD($1$) estimates), function approximation (e.g. TD($0$), TD($\lambda$) estimates), or a hybrid of both, i.e. advantage function (e.g. <a href="https://arxiv.org/abs/1602.01783">A2C</a>, <a href="https://arxiv.org/abs/1506.02438">GAE</a>). While $\rho^{\pi_{\theta}}$ is unknown, sampling from $\rho^{\pi_{\theta}}$ can be simulated by running the policy $\pi_{\theta}$ in the environment. Thus, in practice, the PG integral needs to be approximated using a finite set of samples $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$.
 
 </p>
 
@@ -222,9 +224,9 @@
 
 	where $\mathbf{u}(z) = \nabla_{\theta} \log \pi_{\theta} (a|s)$ is the score function, a $|\Theta|$ dimensional vector ($|\Theta|$ is the number of policy parameters). To keep the expressions concise, the function evaluations at sample locations $\{z_i\}_{i=1}^{n} \sim \rho^{\pi_\theta}$ are grouped into $\mathbf{U} = [ \mathbf{u}(z_1), ..., \mathbf{u}(z_n)]$, a $|\Theta| \times n$ dimensional matrix, and $\mathbf{Q} = [Q_{\pi_\theta}(z_1),...,Q_{\pi_\theta}(z_n)]$, an $n$ dimensional vector. Here, $Q_{\pi_\theta}(z)$ is estimated from MC rollouts or function approximation.<br><br>
 
-  One disadvantage of MC-PG is that it returns stochastic gradient estimates with non-uniform gradient uncertainty, i.e., the MC estimator is more uncertain about the stepsize of some gradient components than others. Thus, MC-PG occasionally take large steps along directions of high uncertainty, resulting in a bad policy update and catastrophic performance degradation (<b><span style="color: #893a5d">reliability &darr;</span></b>). In addition, MC-PG is a point estimation method and hence does not quantify the uncertainty in its gradient estimation. Thus, the only way to make MC-PG estimates more robust to large policy updates is by increasing the number of samples (<b><span style="color: #893a5d">sample efficiency &darr;</span></b>).<br><br>
+  One disadvantage of MC-PG is that it returns stochastic gradient estimates with non-uniform gradient uncertainty, i.e., the MC estimator is more uncertain about the stepsize of some gradient components than others. Thus, MC-PG occasionally take large steps along directions of high uncertainty, resulting in a bad policy update and catastrophic performance degradation (<b><span style="color: #893a5d">reliability &darr;</span></b>). In addition, MC-PG is a point estimation method and hence does not quantify the uncertainty in its gradient estimation. Thus, the only way to make MC-PG estimates more robust to bad policy updates is by increasing the number of samples (<b><span style="color: #893a5d">sample efficiency &darr;</span></b>).<br><br>
 
-	On the other hand, MC method returns the gradient mean evaluated at sample locations, which, according to the central limit theorem (CLT), is an unbiased estimate of the true gradient. However, CLT also suggests that the MC estimates suffer from a slow convergence rate ($n^{-1/2}$) (<b><span style="color: #893a5d">accuracy &darr;</span></b>) and high variance (<b><span style="color: #893a5d">variance &uarr;</span></b>), necessitating a large sample size $n$ (<b><span style="color: #893a5d">sample efficiency &darr;</span></b>) for reliable PG estimation (<a href="https://arxiv.org/abs/1811.02553">Ilyas et al., 2018</a>) (<b><span style="color: #893a5d">reliability &darr;</span></b>). Yet, MC method is significantly more computationally efficient than its sample-efficient alternatives (like BQ), making it the predominantly used PG estimator in most deep PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>).
+	On the other hand, the MC method returns the gradient mean evaluated at sample locations, which, according to the central limit theorem (CLT), is an unbiased estimate of the true gradient. However, CLT also suggests that the MC estimates suffer from a slow convergence rate ($n^{-1/2}$) (<b><span style="color: #893a5d">accuracy &darr;</span></b>) and high variance (<b><span style="color: #893a5d">variance &uarr;</span></b>), necessitating a large sample size $n$ (<b><span style="color: #893a5d">sample efficiency &darr;</span></b>) for reliable PG estimation (<a href="https://arxiv.org/abs/1811.02553">Ilyas et al., 2018</a>) (<b><span style="color: #893a5d">reliability &darr;</span></b>). Yet, MC method is significantly more computationally efficient than its sample-efficient alternatives (like BQ), making it the predominantly used PG estimator in deep PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>).
 
 </p>
 
@@ -662,7 +664,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   </div>
   <br>
 
-  <b>Kernel Learning:</b> As highlighed earlier, BQ-PG can offer more accurate gradient estimates than MC-PG, along with well-calibrated uncertainty estimates, when the state kernel $k_s$ is a better prior that the trivial $k_s = 0$, for modeling the MDP's state-value function. To make the choice of $k_s$ robust to a diverse range of target MDPs, it is suggested to use a base kernel capable of universal approximation (e.g. RBF kernel), followed by increasing the base kernel's expressive power by using a deep neural network (DNN) to transform its inputs. Deep kernels (<a href="http://proceedings.mlr.press/v51/wilson16.pdf">Wilson et al., 2016</a>) combine the non-parametric flexibility of GPs with the structural properties of NNs to obtain more expressive kernel functions when compared to their base kernels. The kernel parameters $\phi$ (DNN parameters + base kernel hyperparameters) are tuned using the gradient of GP's negative log marginal likelihood $J_{GP}$ (<a href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Rasmussen & Williams, 2005</a>),
+  <b>Kernel Learning:</b> As highlighed earlier, BQ-PG can offer more accurate gradient estimates than MC-PG, along with well-calibrated uncertainty estimates, when the state kernel $k_s$ is a better prior that the trivial $k_s = 0$, for modeling the MDP's action-value function $Q_{\pi_{\theta}}$. To make the choice of $k_s$ robust to a diverse range of target MDPs, it is suggested to use a base kernel capable of universal approximation (e.g. RBF kernel), followed by increasing the base kernel's expressive power by using a deep neural network (DNN) to transform its inputs. Deep kernels (<a href="http://proceedings.mlr.press/v51/wilson16.pdf">Wilson et al., 2016</a>) combine the non-parametric flexibility of GPs with the structural properties of NNs to obtain more expressive kernel functions when compared to their base kernels. The kernel parameters $\phi$ (DNN parameters + base kernel hyperparameters) are tuned using the gradient of GP's negative log marginal likelihood $J_{GP}$ (<a href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Rasmussen & Williams, 2005</a>),
   \begin{align}
   \label{eqn:GP_nll}
       J_{GP}(\phi|\mathcal{D}) \propto \log |\mathbf{K}| - \mathbf{Q}^\top \mathbf{K}^{-1} \mathbf{Q}, \quad \nabla_{\phi} J_{GP} = \mathbf{Q}^\top \mathbf{K}^{-1} (\nabla_{\phi}\mathbf{K}) \mathbf{K}^{-1} \mathbf{Q} + Tr(\mathbf{K}^{-1} \nabla_{\phi}\mathbf{K}).
@@ -681,7 +683,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
     </figure>
   </div>
 
-  The practical DBQPG implementation is a linear-time program uses the CG algorithm to deal with the matrix inversion, Fast SVD for Fisher kernel MVM, and SKI for state kernel MVM. Further, the default choice of the state kernel $k_s$ is a deep RBF kernel function, which comprises of an RBF base kernel on top of a DNN feature extractor. The choice of RBF as the base kernel is based on: (i) its compelling theoretical properties such as infinite basis expansion and universal function approximation (<a href="https://www.jmlr.org/papers/volume7/micchelli06a/micchelli06a.pdf">Micchelli et al., 2006</a>) and (ii) its compatibility with the Toeplitz method, that provides additional speed-up for SKI computation over stationary kernel.
+  The practical DBQPG implementation is a linear-time program that uses the CG algorithm to deal with the matrix inversion, Fast SVD for Fisher kernel MVM, and SKI for state kernel MVM. Further, the default choice of the state kernel $k_s$ is a deep RBF kernel function, which comprises of an RBF base kernel on top of a DNN feature extractor. The choice of RBF as the base kernel is based on: (i) its compelling theoretical properties such as infinite basis expansion and universal function approximation (<a href="https://www.jmlr.org/papers/volume7/micchelli06a/micchelli06a.pdf">Micchelli et al., 2006</a>) and (ii) its compatibility with the Toeplitz method, that provides additional speed-up for SKI computation over stationary kernel.
 
   <a class="btn btn-outline btn-info btn-xs",
   onclick="
@@ -698,9 +700,9 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   
   <div id = "practical_dbqpg", class="boxed", style="border: 1px solid green;padding: 10px;background-color:#08E8DE;display:none">
 
-    The overall computational complexity of estimating $\mathbf{L}_{\theta}^{BQ}$ (Eq. \ref{eq:GP_grad}) is $\mathcal{O}(p(n+Ym \log m))$ time and $\mathcal{O}(n+Ym)$ storage ($Y$: state dimensionality; $p$: CG iterations; $m$: number of inducing points in SKI+Toeplitz for deep RBF kernel; automatic differentiation for Fisher kernel).<br>
+    The overall computational complexity of estimating $\mathbf{L}_{\theta}^{BQ}$ (Eq. \ref{eq:GP_grad}) is $\mathcal{O}(p(n+Ym \log m))$ time and $\mathcal{O}(n+Ym)$ storage ($Y$: state dimensionality; $p$: CG iterations; $m$: number of inducing points in SKI+Toeplitz for deep RBF kernel; automatic differentiation for Fisher kernel).<br><br>
 
-    Note that we intentionally left out kernel learning from the complexity analysis since a naive implementation of the gradient-based optimization step (Eq. \ref{eqn:GP_nll}) incurs a cubic time complexity in sample size. Our implementation relies on the black-box matrix-matrix multiplication (BBMM) feature (a batched version of CG algorithm that effectively uses GPU hardware) offered by the <i>GPyTorch library</i> (<a href="https://papers.nips.cc/paper/7985-gpytorch-blackbox-matrix-matrix-gaussian-process-inference-with-gpu-acceleration.pdf">Gardner et al., 2018</a>), coupled with a SKI approximation over $\mathbf{K}_s$. This combination offers a linear-time routine for kernel learning. In other words, DBQPG with kernel learning is a linear-time program that leverages GPU acceleration to efficiently estimate the gradient of a large policy network, with a few thousands of parameters, on high-dimensional continuous domains.
+    Note that I intentionally left out kernel learning from the complexity analysis since a naive implementation of the gradient-based optimization step (Eq. \ref{eqn:GP_nll}) incurs a cubic time complexity in sample size. Our implementation relies on the black-box matrix-matrix multiplication (BBMM) feature (a batched version of CG algorithm that effectively uses GPU hardware) offered by the <i>GPyTorch library</i> (<a href="https://papers.nips.cc/paper/7985-gpytorch-blackbox-matrix-matrix-gaussian-process-inference-with-gpu-acceleration.pdf">Gardner et al., 2018</a>), coupled with a SKI approximation over $\mathbf{K}_s$. This combination offers a linear-time routine for kernel learning. In other words, DBQPG with kernel learning is a linear-time program that leverages GPU acceleration to efficiently estimate the gradient of a large policy network, with a few thousands of parameters, on high-dimensional continuous domains.
 
   </div>
 
@@ -721,7 +723,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
   </div>
 
   <div style='float:left; width:50%;'>
-    Most classical PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>) are derived assuming access to true gradients and therefore do not account the stochasticity in gradient estimation due to finite sample size. In other words, a majority of practical PG algorithms substitutes the true policy gradient estimate from theory with stochastic gradient estimates obtained using MC-PG estimator (predominant choice) or BQ-PG (relatively rare). Since these methods do not consider the uncertainty in PG estimation, they occasionally take large steps along directions of high gradient uncertainty, which results in a bad policy update and catastrophic performance degradation.
+    Most classical PG algorithms (e.g. <a href="https://papers.nips.cc/paper/1713-policy-gradient-methods-for-reinforcement-learning-with-function-approximation.pdf">Vanilla PG</a>, <a href="https://papers.nips.cc/paper/2073-a-natural-policy-gradient.pdf">NPG</a>, <a href="https://arxiv.org/abs/1502.05477">TRPO</a>) are derived assuming access to true gradients and therefore do not account the stochasticity in gradient estimation due to finite sample size. In other words, a majority of practical PG algorithms substitute the true policy gradient estimate from theory with stochastic gradient estimates obtained using MC-PG estimator (predominant choice) or BQ-PG (relatively rare). Since these methods do not consider the uncertainty in PG estimation, they occasionally take large steps along directions of high gradient uncertainty, which results in a bad policy update and catastrophic performance degradation.
   </div>
 
   <br><br>
@@ -738,7 +740,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
      \mathbf{L}_{\theta}^{UAPG} = \nu_{\delta}^{-\frac{1}{2}} \big(\mathbf{I} + \sum\nolimits_{i=1}^{\delta} \mathbf{h}_i \big(\sqrt{{\nu_{\delta}}/{\nu_i}} - \mathbf{I}\big)\mathbf{h}_i^\top \big) \mathbf{L}_{\theta}^{BQ}.
   \end{equation}
 
-  The principal components (PCs) $\{\mathbf{h}_i\}_{i=1}^{\delta}$ denote the top $\delta$ directions of uncertainty and the singular values $\{\nu_i\}_{i=1}^{\delta}$ denote their corresponding magnitude of uncertainty. The rank-$\delta$ decomposition of $\mathbf{C}_{\theta}^{BQ}$ can be computed in linear-time using the randomized SVD algorithm (<a href="https://dl.acm.org/doi/10.1137/090771806">Halko et al., 2011</a>). The UAPG update in Eq. \ref{eqn:UAPG_practical_vanilla} dampens the stepsize of the top $\delta$ directions of uncertainty, relative to the stepsize of remaining gradient components. Thus, in comparison to BQ-PG, UAPG lowers the risk of taking large steps along the directions of high uncertainty, providing reliable policy updates.
+  The principal components (PCs) $\{\mathbf{h}_i\}_{i=1}^{\delta}$ denote the top $\delta$ directions of uncertainty and the singular values $\{\nu_i\}_{i=1}^{\delta}$ denote their corresponding magnitude of uncertainty. The rank-$\delta$ decomposition of $\mathbf{C}_{\theta}^{BQ}$ can be computed in linear-time using the randomized SVD algorithm (<a href="https://dl.acm.org/doi/10.1137/090771806">Halko et al., 2011</a>). The UAPG update in Eq. \ref{eqn:UAPG_practical_vanilla} dampens the stepsize of the top $\delta$ directions of uncertainty, relative to the stepsize of remaining gradient components. Thus, in comparison to BQ-PG, UAPG lowers the risk of taking large steps along the directions of high uncertainty, and thereby providing reliable policy updates.
 
   <a class="btn btn-outline btn-info btn-xs",
   onclick="
@@ -765,18 +767,39 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
         \mathbf{C}_{\theta}^{NBQ} &= \mathbf{G}^{-1} \mathbf{C}_{\theta}^{BQ} \mathbf{G}^{-1}
         = c_2 (\mathbf{G}^{-1} - c_2 \mathbf{G}^{-1} \mathbf{U} \left( c_1 \mathbf{K}_s +c_2 \mathbf{K}_f + \sigma^2 \mathbf{I} \right)^{-1} \mathbf{U}^\top \mathbf{G}^{-1})
         \\
-        &= c_2 (\mathbf{G} + c_2 \mathbf{U} \left( c_1 \mathbf{K}_s + \sigma^2 \mathbf{I} \right)^{-1} \mathbf{U}^\top)^{-1}.
+        &= c_2 (\mathbf{G} + c_2 \mathbf{U} \left( c_1 \mathbf{K}_s + \sigma^2 \mathbf{I} \right)^{-1} \mathbf{U}^\top)^{-1},
     \end{split}\nonumber
     \end{align}
 
-    Since $\mathbf{C}_{\theta}^{NBQ}$ is the inverse of an ill-conditioned matrix, we instead apply the low-rank approximation on ${\mathbf{C}_{\theta}^{NBQ}}^{-1} \approx \nu_\delta \mathbf{I} + \sum_{i=1}^{\delta} \mathbf{h}_i (\nu_i - \nu_\delta) \mathbf{h}_i^\top$ to obtain the UAPG update of NPG:
+    and the ideal UAPG update is $\mathbf{L}^{UAPG}_{\theta} = \left( \mathbf{C}^{NBQ}_{\theta}\right)^{-\frac{1}{2}} \mathbf{G}^{-1}\mathbf{L}^{BQ}_{\theta}$. However, since $\mathbf{C}_{\theta}^{NBQ}$ is the inverse of an ill-conditioned matrix, the singular values corresponding to the high-uncertainty directions of $\mathbf{C}_{\theta}^{NBQ}$ show very little variation in uncertainty.
 
+    Thus, the low-rank approximation instead needs to be applied on ${\mathbf{C}_{\theta}^{NBQ}}^{-1} \approx \nu_\delta \mathbf{I} + \sum_{i=1}^{\delta} \mathbf{h}_i (\nu_i - \nu_\delta) \mathbf{h}_i^\top$ to obtain the UAPG update of NPG:
     \begin{equation}
     \label{eqn:UAPG_npg}
         \mathbf{L}_{\theta}^{UAPG} = \nu_{\delta}^{\frac{1}{2}} \Big(\mathbf{I} + \sum\nolimits_{i=1}^{\delta} \mathbf{h}_i \big( \min \big(\sqrt{{\nu_i}/{\nu_{\delta}}}, \epsilon \big) - \mathbf{I}\big)\mathbf{h}_i^\top \Big) \mathbf{G}^{-1} \mathbf{L}_{\theta}^{BQ}, \qquad \epsilon > 1
     \end{equation}
 
-    where, $\{\mathbf{h}_i, \nu_i\}_{i=1}^\delta$ correspond to the top $\delta$ PCs of ${\mathbf{C}_{\theta}^{NBQ}}^{-1}$ (equivalently the bottom $\delta$ PCs of $\mathbf{C}_{\theta}^{NBQ}$), and $\epsilon > 1$ is a hyperparameter. We replace $\sqrt{{\nu_i}/{\nu_{\delta}}}$ with $\min(\sqrt{{\nu_i}/{\nu_\delta}},\epsilon)$ to avoid taking large steps along these directions, solely on the basis of their uncertainty estimates. UAPG over the NPG estimate increases the step size for the most confident directions (i.e., the top $\delta$ PCs of ${\mathbf{C}_{\theta}^{NBQ}}^{-1}$), as opposed to lowering the stepsize for the most uncertain directions in the case of UAPG over Vanilla PG estimates. For $c_2 \ll 1$, it is interesting to note that (i) $\mathbf{C}_{\theta}^{BQ} \approx c_2 \mathbf{G}$ and $\mathbf{C}_{\theta}^{NBQ} \approx c_2 \mathbf{G}^{-1}$, which implies that the most uncertain gradient directions for vanilla PG approximately correspond to the most confident directions for NPG, and (ii) the ideal UAPG update for both vanilla PG and NPG converges along the $\mathbf{G}^{-\frac{1}{2}}\mathbf{L}_{\theta}^{BQ}$ direction.
+    where, $\{\mathbf{h}_i, \nu_i\}_{i=1}^\delta$ correspond to the top $\delta$ PCs of ${\mathbf{C}_{\theta}^{NBQ}}^{-1}$ (equivalently the bottom $\delta$ PCs of $\mathbf{C}_{\theta}^{NBQ}$, i.e. least uncertain/most confident directions natural gradient estimation), and $\epsilon > 1$ is a hyperparameter. Here, $\sqrt{{\nu_i}/{\nu_{\delta}}}$ is replaced with $\min(\sqrt{{\nu_i}/{\nu_\delta}},\epsilon)$ to avoid taking large steps along these directions, solely on the basis of their uncertainty estimates. Note that UAPG over the NPG estimate increases the step size for the most confident directions (i.e., the top $\delta$ PCs of ${\mathbf{C}_{\theta}^{NBQ}}^{-1}$), as opposed to lowering the stepsize for the most uncertain directions in the case of UAPG over Vanilla PG estimates.<br><br>
+
+    <h2 style="text-align: center;"><b>Relation between the Gradient Uncertainties of Vanilla PG and NPG</b></h2>
+    <br>
+
+    Empirically, we found that the optimal value of $c_2 \ll 1$, at which point, the gradient uncertainty of Vanilla PG and Natural PG algorithms approximate to:
+    
+    \begin{align}
+    \begin{split}
+    \mathbf{C}_{\theta}^{BQ} &= c_2 \mathbf{G} - c_2^2\mathbf{U} (c_1\mathbf{K}_s + c_2\mathbf{K}_f +\sigma^2\mathbf{I})^{-1} \mathbf{U}^\top \approx c_2 \mathbf{G},
+    \\
+    \mathbf{C}_{\theta}^{NBQ} &= c_2 (\mathbf{G} + c_2 \mathbf{U} \left( c_1 \mathbf{K}_s + \sigma^2 \mathbf{I} \right)^{-1} \mathbf{U}^\top)^{-1} \approx c_2 {\mathbf{G}}^{-1}.
+    \end{split}\nonumber
+    \end{align}
+    
+    This observation is particularly interesting because for $c_2 \ll 1$, the most uncertain gradient directions for vanilla PG approximately correspond to the most confident (least uncertain) directions for NPG. Crudely speaking, the natural gradient takes the step size along each direction and divides it by the estimated variance (from the gradient covariance matrix), which results in an inversion of the uncertainty. In contrast, UAPG divides the stepsize along each direction by the estimated standard deviation, which results in uniform uncertainty along all the directions. Moreover, for $c_2 \ll 1$, the ideal UAPG update for both vanilla PG and NPG become equal to:
+
+    \begin{equation}
+    \mathbf{L}_{\theta}^{BQ} = \mathbf{L}_{\theta}^{NBQ} = c_2^{\frac{1}{2}} \mathbf{G}^{-\frac{1}{2}} \mathbf{U} \left( c_1 \mathbf{K}_s + \sigma^2 \mathbf{I} \right)^{-1} \mathbf{Q} \nonumber
+    \end{equation}
+
 
   </div>
 
@@ -818,7 +841,7 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
 
   </ul>
 
-  <b>Quality of Gradient Estimation:</b> Figure 6 compares the quality of PG estimates obtained via DBQPG and MC estimation using two metrics: (i) <b>gradient accuracy</b> or the average cosine similarity of the obtained gradient estimates with respect to the true gradient estimates (estimated from $10^6$ state-action pairs) and (ii) <b>variance</b> in the gradient estimates (normalized by the norm of the mean gradient for scale invariance).<br>
+  <b>Quality of Gradient Estimation:</b> Figure 6 compares the quality of PG estimates obtained via DBQPG and MC estimation using two metrics: (i) <i>gradient accuracy</i> or the average cosine similarity of the obtained gradient estimates with respect to the true gradient estimates (estimated from $10^6$ state-action pairs) and (ii) <i>variance</i> in the gradient estimates (normalized by the norm of the mean gradient for scale invariance).<br>
 
   <figure>
     <!-- <img src="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/img/UAPG-diagram.png" class="pub-banner" itemprop="image"> -->
@@ -848,22 +871,22 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
     <center>
     <img src="/projects/DBQPG/VanillaPG_plot.png" alt="VanillaPG_Plot"/>
     <figcaption style="text-align: center;">
-      Vanilla Policy Gradient
+      Comparison of MC, DBQPG, and UAPG estimators in <b>vanilla policy gradient algorithm</b>.
     </figcaption>
     <hr>
     <img src="/projects/DBQPG/NPG_plot.png" alt="NPG_Plot"/>
     <figcaption style="text-align: center;">
-      Natural Policy Gradient
+      Comparison of MC, DBQPG, and UAPG estimators in <b>natural policy gradient algorithm (NPG)</b>.
     </figcaption>
     <hr>
     <img src="/projects/DBQPG/TRPO_plot.png" alt="TRPO_Plot"/>
     </center>
     <figcaption style="text-align: center;">
-      Trust Region Policy Optimization
+      Comparison of MC, DBQPG, and UAPG estimators in <b>trust region policy optimization (TRPO)</b>.
     </figcaption>
   </figure>
 
-  The advantage of UAPG estimates is more pronounced in the vanilla PG, and NPG experiments since the performance on these algorithms is highly sensitive to the choice of learning rates. UAPG adjusts the stepsize of each gradient component based on its uncertainty, resulting in a robust update in the face of uncertainty, a better sample complexity, and average return. UAPG performs at least as good as, if not considerably better than, DBQPG on most experiments. Since TRPO updates are less sensitive to the learning rate, UAPG adjustment does not provide a significant improvement over DBQPG.
+  The UAPG method performs at least as good as, if not considerably better than, DBQPG on most experiments. The advantage of UAPG estimates is more pronounced in the vanilla PG, and NPG experiments since the performance on these algorithms is highly sensitive to the choice of learning rates. UAPG adjusts the stepsize of each gradient component based on its uncertainty, resulting in a robust update in the face of uncertainty, a better sample complexity, and average return. Since TRPO updates are less sensitive to the learning rate, UAPG adjustment does not provide a significant improvement over DBQPG.
 
 </p>
 
@@ -871,11 +894,11 @@ Now, despite all its interesting properties, BQ-PG is still more computationally
 <h1 style="text-align: center; font-variant: small-caps;">Final Words</h1>
 
   <p>
-    In policy gradient (PG) algorithms, the agent estimates the PG using samples gathered through its interaction with the environment, which in real-world is often <i>expensive</i> due to pratical considerations such as time, money or limited resources. Thus, accurate PG estimation from a finite number of samples is a crucial problem in reinforcement learning. However, most contemporary deep PG algorithms use Monte-Carlo (MC) PG estimator, which (i) computes undesirably inaccurate PG estimates with high variance, (ii) suffers from sample inefficiency and a slow convergence rate, and (iii) provides unreliable PG estimates with non-uniform uncertainty, which is not explicitly quantified. <br><br>
+    <!-- In policy gradient (PG) algorithms, the agent estimates the PG using samples gathered through its interaction with the environment, which in real-world is often <i>expensive</i> due to pratical considerations such as time, money or limited resources. Thus, accurate PG estimation from a finite number of samples is a crucial problem in reinforcement learning. However, most contemporary deep PG algorithms use Monte-Carlo (MC) PG estimator, which (i) computes undesirably inaccurate PG estimates with high variance, (ii) suffers from sample inefficiency and a slow convergence rate, and (iii) provides unreliable PG estimates with non-uniform uncertainty which, furthermore, is not explicitly quantified. <br><br> -->
 
     Bayesian quadrature (BQ) is a technique for computing accurate policy gradient (PG) estimates from a finite number of samples. DBQPG overcomes the computational challenges of BQ-PG to provide a linear-time routine that can directly substitute MC estimator is contemporary deep PG algorithms. Empirical studies suggest that DBQPG provides more accurate gradient estimates with a significantly lower variance, when compared to MC estimation. Further, replacing the MC estimator with DBQPG in the gradient estimation subroutine of three deep PG algorithms, viz., Vanilla PG, NPG, and TRPO, consistently and considerably improves in the agent's sample complexity and average return. These results strongly advocates the substitution of MC estimator subroutine with DBQPG in deep PG algorithms.<br><br>
 
-    To obtain reliable policy updates from stochastic gradient estimates, one needs to estimate the uncertainty in gradient estimation, in addition to the gradient estimation itself. The UAPG method additionally utilizes the uncertainty in PG estimation, quantified by DBQPG, to normalize the gradient components by their uncertainties, returning a uniformly uncertain gradient estimate. Such a normalization will lower the step size of gradient components with high uncertainties and vice versa, resulting in reliable updates with robust step sizes. UAPG further improves the sample complexity over DBQPG on Vanilla PG, NPG, and TRPO algorithms. Overall, it is possible to scale Bayesian quadrature to high-dimensional settings, while its better gradient estimation and well-calibrated gradient uncertainty can significantly boost the performance of deep PG algorithms. In comparison to DBQPG, UAPG uses slightly more computation to provide superior sample complexity and average return.
+    To obtain reliable policy updates from stochastic gradient estimates, one needs to estimate the uncertainty in gradient estimation, in addition to the gradient estimation itself. The UAPG method additionally utilizes the uncertainty in PG estimation quantified by DBQPG, to normalize the gradient components by their uncertainties, returning a uniformly uncertain gradient estimate. Such a normalization will lower the step size of gradient components with high uncertainties and vice versa, resulting in reliable updates with robust step sizes. UAPG uses slightly more computation than DBQPG to provide superior sample complexity and average return. Overall, it is possible to scale Bayesian quadrature to high-dimensional settings, while its better gradient estimation and well-calibrated gradient uncertainty can significantly boost the performance of deep PG algorithms.
 
 
   </p>
