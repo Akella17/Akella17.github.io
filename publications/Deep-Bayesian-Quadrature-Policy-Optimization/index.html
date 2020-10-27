@@ -77,7 +77,7 @@
 
       <p class="pub-authors" itemprop="author" align="center">
         
-        <b>Akella Ravi Tej</b>, <a href="https://www.cs.purdue.edu/homes/kamyar/">Kamyar Azizzadenesheli</a>, <a href="http://chercheurs.lille.inria.fr/~ghavamza/my_website/About_Me.html">Mohammad Ghavamzadeh</a>, <a href="http://tensorlab.cms.caltech.edu/users/anima/">Anima Anandkumar</a>, <a href="http://www.yisongyue.com/">Yisong Yue</a>
+        <b>Akella Ravi Tej</b>, <a href="https://www.cs.purdue.edu/homes/kamyar/">Kamyar Azizzadenesheli</a>, <a href="https://mohammadghavamzadeh.github.io/">Mohammad Ghavamzadeh</a>, <a href="http://tensorlab.cms.caltech.edu/users/anima/">Anima Anandkumar</a>, <a href="http://www.yisongyue.com/">Yisong Yue</a>
         
 </p><br>
 </div>
@@ -87,7 +87,7 @@
     
 
     <h3>Abstract</h3>
-    <p class="pub-abstract" itemprop="text">We study the problem of obtaining accurate policy gradient estimates. This challenge manifests in how best to estimate the policy gradient integral equation using a finite number of samples. Monte-Carlo methods have been the default choice for this purpose, despite suffering from high variance in the gradient estimates. On the other hand, more sample efficient alternatives like Bayesian quadrature methods are less scalable due to their high computational complexity. In this work, we propose deep Bayesian quadrature policy gradient (DBQPG), a computationally efficient high-dimensional generalization of Bayesian quadrature, to estimate the policy gradient integral equation. We show that DBQPG can substitute Monte-Carlo estimation in policy gradient methods, and demonstrate its effectiveness on a set of continuous control benchmarks for robotic locomotion. In comparison to Monte-Carlo estimation, DBQPG provides (i) more accurate gradient estimates with a significantly lower variance, (ii) a consistent improvement in the sample complexity and average return for several on-policy deep policy gradient algorithms, and, (iii) a methodological way to quantify the uncertainty in gradient estimation that can be incorporated to further improve the performance.</p>
+    <p class="pub-abstract" itemprop="text">We study the problem of obtaining accurate policy gradient estimates using a finite number of samples. Monte-Carlo methods have been the default choice for policy gradient estimation, despite suffering from high variance in the gradient estimates. On the other hand, more sample efficient alternatives like Bayesian quadrature methods are less scalable due to their high computational complexity. In this work, we propose deep Bayesian quadrature policy gradient (DBQPG), a computationally efficient high-dimensional generalization of Bayesian quadrature, for policy gradient estimation. We show that DBQPG can substitute Monte-Carlo estimation in policy gradient methods, and demonstrate its effectiveness on a set of continuous control benchmarks. In comparison to Monte-Carlo estimation, DBQPG provides (i) more accurate gradient estimates with a significantly lower variance, (ii) a consistent improvement in the sample complexity and average return for several deep policy gradient algorithms, and, (iii) the uncertainty in gradient estimation that can be incorporated to further improve the performance.</p>
 
     <div class="row">
       <div class="col-sm-1"></div>
@@ -140,6 +140,11 @@ onclick="
 ">
   BibTeX
 </a>
+
+<a class="btn btn-primary btn-outline btn-xs" href="https://akella17.github.io/blogs/Bayesian-Quadrature-for-Policy-Gradient/">
+  Blog
+</a>
+
 <a class="btn btn-primary btn-outline btn-xs" href="https://github.com/Akella17/Deep-Bayesian-Quadrature-Policy-Optimization">
   Code
 </a>
